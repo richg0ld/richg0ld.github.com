@@ -7,11 +7,13 @@
  ------------------------------------------------- */
 module Mobile {
 	export class MenuController {
+		HEADER: JQuery;
 		btnElement: JQuery;
 		layerElement: JQuery;
 		gnbElement: JQuery;
 		openSizeWidth: string;
 		TYPE: string;
+		WIDTH: number;
 		direction: any;
 		WRAP: JQuery;
 		DIMMED: JQuery;
@@ -23,6 +25,7 @@ module Mobile {
 		timer: number;
 		constructor(options: any) {
 			var settings = {
+				header: "#header",
 				btn: "#gnb_btn",//버튼 아이디 또는 클래스명(제이쿼리 방식으로 구분자 사용)
 				gnbWrap: "#gnb_wrap",//gnb와 dimmed를 포함한 div 아이디 또는 클래스명(제이쿼리 방식으로 구분자 사용)
 				gnb: "#gnb",//메뉴 div 아이디 또는 클래스명(제이쿼리 방식으로 구분자 사용)
@@ -40,6 +43,7 @@ module Mobile {
 		}
 		settingGnb(settings: any, options: any) {
 			$.extend(settings, options);
+			this.HEADER = $(settings.header);
 			this.btnElement = $(settings.btn);
 			this.layerElement = $(settings.gnbWrap);
 			this.gnbElement = $(settings.gnb);
@@ -50,9 +54,9 @@ module Mobile {
 			this.SPEED = settings.speed;
 			this.TYPE = settings.type;
 
-			this.gnbElement.css({ "width": settings.gnbWidth });
+			
 			this.directionValueSave(settings.direction, this.openSizeWidth);
-			this.setOpenType(this.TYPE);
+			this.setOpenType(this.TYPE, this.openSizeWidth);
 		}
 		directionValueSave(direction: string, gnbWidth: string) {
 			this.direction = {
@@ -71,8 +75,9 @@ module Mobile {
 			this.directionValueWidthPlus = this.direction[direction]["widthPlus"];
 			this.directionValueZero = this.direction[direction]["zero"];
 		}
-		setOpenType(type: string) {
+		setOpenType(type: string, gnbWidth: string) {
 			var _this = this;
+			this.gnbElement.css({ "width": gnbWidth });
 			var set = {
 				default: function() {
 					_this.layerElement.css({ "display": "none" });
@@ -85,6 +90,7 @@ module Mobile {
 				fade: function() {
 					_this.layerElement.css({ "display": "none" });
 					_this.gnbElement.css({ "opacity": 0 });
+					_this.gnbElement.css(_this.directionValueZero);
 				},
 				push: function() {
 					_this.gnbElement.css(_this.directionValueWidthMinus);
@@ -112,6 +118,7 @@ module Mobile {
 					_this.DIMMED.stop().animate({ "opacity": 0.5 }, _this.SPEED);
 				},
 				push: function() {
+					_this.HEADER.stop().animate(_this.directionValueWidthPlus, _this.SPEED);
 					_this.moveWrap.stop().animate(_this.directionValueWidthPlus, _this.SPEED);
 					_this.DIMMED.stop().animate({ "opacity": 0.5 }, _this.SPEED);
 				}
@@ -136,6 +143,7 @@ module Mobile {
 					_this.DIMMED.stop().animate({ "opacity": 0 }, _this.SPEED);
 				},
 				push: function() {
+					_this.HEADER.stop().animate(_this.directionValueZero, _this.SPEED);
 					_this.moveWrap.stop().animate(_this.directionValueZero, _this.SPEED)
 					_this.DIMMED.stop().animate({ "opacity": 0 }, _this.SPEED);
 				}
@@ -219,8 +227,7 @@ module Mobile {
 		}
 		cdtScrollStop(){
 			var _this = this;
-			if (_this.currentScrollTop >= _this.footerOffsetTop - _this.winHeight) {
-				console.log(_this.footerOffsetTop, _this.winHeight);
+			if (this.currentScrollTop <= this.HEADER.height() || this.currentScrollTop >= this.footerOffsetTop - this.winHeight) {
 				this.HEADER.stop().animate({ "top": "0px" });
 			}
 		}

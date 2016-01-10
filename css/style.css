@@ -32,7 +32,7 @@ strong {font-weight:normal}
 html, body{width:100%;height:100%;}
 #wrap{position:relative;width:100%;height:100%;}
 #move_wrap{position:relative;background-color:#ffffff;min-height:100%;z-index:10}
-#gnb_wrap{display:none;position:fixed;top:0;float:none;width:100%;height:100%;z-index:30;}
+#gnb_wrap{display:none;position:fixed;top:0;bottom:0;float:none;width:100%;height:100%;z-index:30;}
 #gnb{position:absolute;top:0;bottom:0;width:300px;height:100%;background-color:#242529;z-index:50;}
 #header{position:fixed;top:0;width:100%;height:52px;background-color:#666666;text-align:center;}
 #container{background-color:#ffffff;height:100%;padding:52px 0 95px 0;}

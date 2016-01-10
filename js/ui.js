@@ -9,6 +9,7 @@ var Mobile;
     var MenuController = (function () {
         function MenuController(options) {
             var settings = {
+                header: "#header",
                 btn: "#gnb_btn",
                 gnbWrap: "#gnb_wrap",
                 gnb: "#gnb",
@@ -26,6 +27,7 @@ var Mobile;
         }
         MenuController.prototype.settingGnb = function (settings, options) {
             $.extend(settings, options);
+            this.HEADER = $(settings.header);
             this.btnElement = $(settings.btn);
             this.layerElement = $(settings.gnbWrap);
             this.gnbElement = $(settings.gnb);
@@ -35,9 +37,8 @@ var Mobile;
             this.openSizeWidth = settings.gnbWidth;
             this.SPEED = settings.speed;
             this.TYPE = settings.type;
-            this.gnbElement.css({ "width": settings.gnbWidth });
             this.directionValueSave(settings.direction, this.openSizeWidth);
-            this.setOpenType(this.TYPE);
+            this.setOpenType(this.TYPE, this.openSizeWidth);
         };
         MenuController.prototype.directionValueSave = function (direction, gnbWidth) {
             this.direction = {
@@ -56,8 +57,9 @@ var Mobile;
             this.directionValueWidthPlus = this.direction[direction]["widthPlus"];
             this.directionValueZero = this.direction[direction]["zero"];
         };
-        MenuController.prototype.setOpenType = function (type) {
+        MenuController.prototype.setOpenType = function (type, gnbWidth) {
             var _this = this;
+            this.gnbElement.css({ "width": gnbWidth });
             var set = {
                 default: function () {
                     _this.layerElement.css({ "display": "none" });
@@ -70,6 +72,7 @@ var Mobile;
                 fade: function () {
                     _this.layerElement.css({ "display": "none" });
                     _this.gnbElement.css({ "opacity": 0 });
+                    _this.gnbElement.css(_this.directionValueZero);
                 },
                 push: function () {
                     _this.gnbElement.css(_this.directionValueWidthMinus);
@@ -96,6 +99,7 @@ var Mobile;
                     _this.DIMMED.stop().animate({ "opacity": 0.5 }, _this.SPEED);
                 },
                 push: function () {
+                    _this.HEADER.stop().animate(_this.directionValueWidthPlus, _this.SPEED);
                     _this.moveWrap.stop().animate(_this.directionValueWidthPlus, _this.SPEED);
                     _this.DIMMED.stop().animate({ "opacity": 0.5 }, _this.SPEED);
                 }
@@ -120,6 +124,7 @@ var Mobile;
                     _this.DIMMED.stop().animate({ "opacity": 0 }, _this.SPEED);
                 },
                 push: function () {
+                    _this.HEADER.stop().animate(_this.directionValueZero, _this.SPEED);
                     _this.moveWrap.stop().animate(_this.directionValueZero, _this.SPEED);
                     _this.DIMMED.stop().animate({ "opacity": 0 }, _this.SPEED);
                 }
@@ -194,8 +199,7 @@ var Mobile;
         };
         HeadController.prototype.cdtScrollStop = function () {
             var _this = this;
-            if (_this.currentScrollTop >= _this.footerOffsetTop - _this.winHeight) {
-                console.log(_this.footerOffsetTop, _this.winHeight);
+            if (this.currentScrollTop <= this.HEADER.height() || this.currentScrollTop >= this.footerOffsetTop - this.winHeight) {
                 this.HEADER.stop().animate({ "top": "0px" });
             }
         };

@@ -199,8 +199,9 @@ var Mobile;
         };
         HeadController.prototype.cdtScrollStop = function () {
             var _this = this;
-            if (this.currentScrollTop <= this.HEADER.height() || this.currentScrollTop >= this.footerOffsetTop - this.winHeight) {
-                this.HEADER.stop().animate({ "top": "0px" });
+            if (this.currentScrollTop <= this.winHeight || this.currentScrollTop >= this.footerOffsetTop - this.winHeight) {
+                console.log(this.winHeight);
+                this.show();
             }
         };
         HeadController.prototype.activate = function () {

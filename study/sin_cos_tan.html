@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>sin, cos, tan 테스트</title>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<style type="text/css">
+html, body{margin:0;width:100%;height:100%;}
+#wrapper {width:100%;height:100%;}
+#box {position:relative;width:800px;height:800px;border:1px solid #ccc;border-radius:50%;}
+#quadrant {position:absolute;left:50%;top:50%;}
+#ball1, #ball2, #ball3{border-radius:50%;width:20px;height:20px;display:block;position:absolute;left:0;top:0;margin:-10px 0 0 -10px;background-color: #ff0000;}
+</style>
+</head>
+<body>
+<div id="wrapper">
+	<div id="box">
+		<div id="quadrant">
+		</div>	
+    </div>
+</div> 
+</body>
+<script>
+
+var incrsNum1 = 0
+var incrsNum2 = 0
+
+setInterval(function(){
+	mathFunc(incrsNum1, incrsNum2)
+	incrsNum1 >= Math.PI * 2 ? incrsNum1 = 0 : incrsNum1 = incrsNum1 + 0.01;
+	incrsNum2 >= Math.PI * 2 ? incrsNum2 = 0 : incrsNum2 = incrsNum2 + 0.03;
+	// console.log(incrsNum1, incrsNum2)
+},10)
+
+function mathFunc(a, b){
+
+	var ballcosA = Math.cos(a)*400;
+	var ballsinA = Math.sin(a)*400;
+	var balltanA = Math.tan(a)*400;
+
+	var ballcosB = Math.cos(b)*400;
+	var ballsinB = Math.sin(b)*400;
+	var balltanB = Math.tan(b)*400;
+
+	if ($("#quadrant span").length > 50){
+		$("#quadrant span").first().remove();
+	}
+	$("#quadrant").append("<span id=ball1 style = \"left:"+ballsinA+"px\;top:"+ ballcosB+"px\"></span>");
+
+}
+</script>
+</html>

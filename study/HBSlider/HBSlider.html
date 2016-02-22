@@ -4,13 +4,15 @@
 <meta charset="utf-8">
 <title>캐릭터 소개 율리아나 | 그라나도 에스파다</title>
 <link rel="stylesheet" href="./css/style.css" />
+<link rel="stylesheet" href="./css/HBSlider.css" />
 <script src="./js/jq-1.10.2.min.js"></script>
-<script src="./js/ui.js"></script>
+<script src="./js/ui.js"></script><!--JQuery Easing을 불러와도 무방-->
+<script src="./js/HBSlider.js"></script>
 </head>
 <body>
 	<div id="wrap">
-		<button type="button" class="HBSliderBtn">슬라이드 열기</button>
-		<div id="HBSlider">
+		<button type="button" class="HBSliderBtn1">슬라이드 열기</button>
+		<div id="slider1">
 			<ul>
 				<li><img src="images/HBSlider/screenshot/img_screenshot1.jpg" width="759" height="403" alt=""></li>
 				<li><img src="images/HBSlider/screenshot/img_screenshot2.jpg" width="759" height="403" alt=""></li>
@@ -30,16 +32,66 @@
 				<li><img src="images/HBSlider/screenshot/img_screenshot16.jpg" width="759" height="403" alt=""></li>
 			</ul>
 		</div>
+
+		<button type="button" class="btn2">슬라이드 열기</button>
+		<div id="slider2">
+			<ul>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot1.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot2.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot3.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot4.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot5.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot6.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot7.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot8.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot9.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot10.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot11.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot12.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot13.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot14.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot15.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot16.jpg" width="759" height="403" alt=""></li>
+			</ul>
+		</div>
+
+		<button type="button" class="btn3">슬라이드 열기</button>
+		<div id="slider3">
+			<ul>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot1.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot2.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot3.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot4.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot5.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot6.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot7.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot8.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot9.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot10.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot11.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot12.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot13.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot14.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot15.jpg" width="759" height="403" alt=""></li>
+				<li><img src="images/HBSlider/screenshot2/img_screenshot16.jpg" width="759" height="403" alt=""></li>
+			</ul>
+		</div>
 	</div>
 </body>
 <script type="text/javascript">
-	var slideimages = new SlideImages({ //아래는 기본 세팅 값
-		HBSlider: "#HBSlider",
-        speed: 300,
-        easing: "easeInOutExpo",
-        openBtn: true,
-        CloseBtn: true,
-        openBtnName: ".HBSliderBtn"
+	var slideimages1 = new SlideImages({
+		sliderArea: "#slider1",
+        openBtnName: ".HBSliderBtn1"
+	});
+
+	var slideimages2 = new SlideImages({
+		sliderArea: "#slider2",
+        openBtnName: ".btn2"
+	});
+
+	var slideimages3 = new SlideImages({
+		sliderArea: "#slider3",
+        openBtnName: ".btn3"
 	});
 </script>
 </html>

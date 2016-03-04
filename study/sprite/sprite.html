@@ -12,26 +12,12 @@
 </div>
 <script type="text/javascript">
 
-	// function getStyle(obj,cssProperty, jsProperty) {
-	//  var cssValue = null;
-	//  if(obj.currentStyle) {
-	//   cssValue = obj.currentStyle[jsProperty];
-	//  }
-	//  else if(window.getComputedStyle) {
-	//   cssValue = document.defaultView.getComputedStyle(obj, null).getPropertyValue(cssProperty);
-	//  }
-	//  else {
-	//   return null;
-	//  }
-	//  return cssValue;
-	// }
-
 (()=>{
 
 	const spArea = Symbol("spArea"),
 		  bgPos = Symbol("spPos");
 
-	class SpriteAnimation {
+	const SpriteAnimation = class {
 		constructor(){
 			this.set();
 		}

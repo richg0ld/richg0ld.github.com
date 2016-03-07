@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>메소드 체인</title>
+<style type="text/css">
+
+</style>
+</head>
+<body>
+<div id="target1">1a#</div>
+<div class="target2">123</div> 
+<div class="target2">456</div> 
+<div class="deco">asd</div>
+</body>
+<script>
+var DECORATE = (function(){
+	var Common = {
+		css:function(st){
+			if(this.element.length){
+				for( var n = 0; n<this.element.length; n++ ){
+					for( key in st ){
+						this.element[n].style[key] = st[key]
+					}
+				}
+			}else{
+				for( key in st ){
+					this.element.style[key] = st[key]
+				}
+			}
+			return this;
+		}
+
+	}
+	var Root = function(elem){
+		if(this instanceof Root){
+			var elem = elem || "deco";
+			this.element = document.getElementById(elem) || document.getElementsByClassName(elem);
+			return this;
+		}
+		return new Root(elem);
+	}
+	Root.prototype = Common;
+	return Root;
+})();
+
+var deco1 = DECORATE("target1").css({"background-color":"#000000"});
+var deco2 = DECORATE("target2").css({"width":"400px", "height":"300px","background-color":"#3884e1","color":"#ffffff"});
+var deco3 = DECORATE().css({"width":"400px", "height":"300px","background-color":"#f42f32"});
+
+</script>
+</html>

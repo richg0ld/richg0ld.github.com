@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>메소드 체인</title>
 <style type="text/css">
-
+.red {background-color:#ff0004!important;}
 </style>
 </head>
 <body>
@@ -14,39 +14,71 @@
 <div class="deco">asd</div>
 </body>
 <script>
-var DECORATE = (function(){
+var D = (function(){
 	var Common = {
-		css:function(st){
-			if(this.element.length){
-				for( var n = 0; n<this.element.length; n++ ){
-					for( key in st ){
-						this.element[n].style[key] = st[key]
-					}
-				}
-			}else{
+		css:function(st){//스타일 메소드
+			for( var n = 0; n<this.element.length; n++ ){
 				for( key in st ){
-					this.element.style[key] = st[key]
+					this.element[n].style[key] = st[key]
 				}
 			}
 			return this;
+		},
+		txt:function(txt){//텍스트 입력 메소드
+			for( var n = 0; n<this.element.length; n++ ){
+				this.element[n].innerHTML = txt;
+			}
+			return this;
+		},
+		addClass:function(name){
+			for( var n = 0; n<this.element.length; n++ ){
+				this.element[n].className = name;
+			}
 		}
-
 	}
-	var Root = function(elem){
-		if(this instanceof Root){
-			var elem = elem || "deco";
-			this.element = document.getElementById(elem) || document.getElementsByClassName(elem);
+	var D_Root = function(elem){
+		if(this instanceof D_Root){
+			var elem = elem || ".deco";
+			this.element = document.querySelectorAll(elem);
 			return this;
 		}
-		return new Root(elem);
+		return new D_Root(elem);
 	}
-	Root.prototype = Common;
-	return Root;
+	D_Root.prototype = Common;
+	return D_Root;
 })();
 
-var deco1 = DECORATE("target1").css({"background-color":"#000000"});
-var deco2 = DECORATE("target2").css({"width":"400px", "height":"300px","background-color":"#3884e1","color":"#ffffff"});
-var deco3 = DECORATE().css({"width":"400px", "height":"300px","background-color":"#f42f32"});
+var deco1 = D("#target1").css({"color":"#ffffff", "background-color":"#000000"});
+var deco2 = D(".target2").css({"width":"400px", "height":"300px", "color":"#ffffff", "background-color":"#3884e1"}).txt("abcd").addClass("aaa");
+var deco3 = D().css({"width":"200px", "height":"200px","background-color":"#f42f32"});
+
+
+// var $ = (function(){
+// 	var slt = function(selector){
+// 		return {
+// 			on: function(evt, cb){}
+// 		}
+// 	}
+// 	return slt;
+// })()
+
+var D = (function(){
+	var Common = {
+		css:function(st){
+			return this;
+		},
+		txt:function(txt){
+			return this;
+		},
+		addClass:function(name){
+		}
+	}
+	var D_Root = function(elem){
+		return new D_Root(elem);
+	}
+	D_Root.prototype = Common;
+	return D_Root;
+})();
 
 </script>
 </html>

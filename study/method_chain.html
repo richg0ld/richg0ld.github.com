@@ -17,7 +17,7 @@
 var D = (function(){
 	var Common = {
 		css:function(st){//스타일 메소드
-			for( var n = 0; n<this.element.length; n++ ){
+			for( var n = 0; n < this.element.length; n++ ){
 				for( key in st ){
 					this.element[n].style[key] = st[key]
 				}
@@ -25,13 +25,13 @@ var D = (function(){
 			return this;
 		},
 		txt:function(txt){//텍스트 입력 메소드
-			for( var n = 0; n<this.element.length; n++ ){
+			for( var n = 0; n < this.element.length; n++ ){
 				this.element[n].innerHTML = txt;
 			}
 			return this;
 		},
 		addClass:function(name){
-			for( var n = 0; n<this.element.length; n++ ){
+			for( var n = 0; n < this.element.length; n++ ){
 				this.element[n].className = name;
 			}
 		}

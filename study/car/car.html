@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>
+body{background:url(bg.jpg) repeat-x 0 0;}
+.wheel{
+transform-origin:35px 35px;/*회전시킬 기준점*/
+animation:rotateSnow linear 0s infinite;animation-play-state:running;/*paused 는 멈춤*/
+/*animation-duration: 0.1s;*/
+}
+@keyframes rotateSnow{
+	100%{transform:rotate(360deg);}
+}
+
+#Tayo{left:300px;top:180px;}
+#Tayo2{left:600px;top:300px;}
+</style>
+</head>
+<body>
+
+<script type="text/javascript">
+var pos = 0;//초기 거리 값이기 떄문에 외부에 노출이 되어도 무방 (사실 불안..ㅋㅋ 누가 바꿀 수 있기 때문)
+var Move = (function(){ //배경화면 움직임
+    var v;
+    var itv;
+    function Move(speed){
+        stop();
+        if(speed==0) return;
+        v = speed;
+        itv = setInterval(moving, 16);
+    }
+    function moving(){
+        document.getElementsByTagName("body")[0].style.backgroundPosition = -pos+"px 0px";
+        pos+=v;
+    }
+    function stop(){
+        clearInterval(itv)
+    }
+    return Move;
+})();
+
+var Car = (function(){
+    function Car(name, frame, enigne, frontWheel, backWheel, skin, frontGlass, sideGlass,light){//자동차 공장
+        var _this = this;
+        
+        this.version = "1.1.0"
+        this.name = name;
+        this.speed = 0;
+        this.frame = frame; //골격
+        this.skin = skin; //겉면
+        this.engine = enigne; //엔진
+        this.backWheel = backWheel; //뒷바퀴
+        this.frontWheel = frontWheel; //앞바퀴
+        this.frontGlass = frontGlass; //앞유리
+        this.sideGlass = sideGlass; //옆유리
+        this.light = light; //상향등
+        
+        var assembly = (function(name){//조립
+            var car = document.createElement("div");
+            car.setAttribute("id",name);
+            
+            document.body.appendChild(car);
+            car.appendChild(_this.frame.shaped);
+            car.style.position = "absolute"
+            
+            for ( k in _this){
+                if(_this[k].visual){
+                    car.appendChild(_this[k].visual);
+                    _this[k].visual.style.position = "absolute"
+                }
+            }
+            
+            _this.skin.visual.style.left = 0;            _this.skin.visual.style.top = 0;
+            _this.engine.visual.style.left = "30px";            _this.engine.visual.style.top = "60px";
+            _this.backWheel.visual.style.left = "30px";            _this.backWheel.visual.style.top = "160px";
+            _this.frontWheel.visual.style.left = "300px";            _this.frontWheel.visual.style.top = "160px";
+            _this.frontGlass.visual.style.left = "330px";            _this.frontGlass.visual.style.top = "20px";
+            _this.sideGlass.visual.style.left = "220px";            _this.sideGlass.visual.style.top = "20px";
+            _this.light.visual.style.left = "380px";            _this.light.visual.style.top = "150px";
+        })(this.name);
+    }
+    return Car;
+})();
+Car.prototype.speedUp = function (value){
+    value < 0 ? value = 0 : value;
+    value >= 0 ? this.speed+=value : ++this.speed;
+    console.log(this);
+    this.engine.movement(this.speed);//엔진에서 속도 값을받음.
+    this.backWheel.rotate(this.name, this.engine.horsePower); //속도값을 받은 엔진에서 마력으로 변환시켜시킨걸 뒷바퀴가 받음.(보통은 4륜 자동차라 뒷바퀴에 전달하면 앞바퀴도 움직이게 설계되어있음.)
+}
+Car.prototype.speedDown = function (value){
+    value < 0 ? value = 0 : value;
+    value >= 0 ? this.speed-=value : this.speed--;
+    this.speed < 0 ? this.speed = 0 : this.speed;
+    this.engine.movement(this.speed);
+    this.backWheel.rotate(this.name, this.engine.horsePower);
+}
+Car.prototype.changeSpeed = function (value){
+    value ? this.speed += value : this.speed;
+    this.speed < 0 ? this.speed = 0 : this.speed;
+    this.engine.movement(this.speed);
+    this.backWheel.rotate(this.name, this.engine.horsePower);
+}
+Car.prototype.boost = function(){
+    var _this = this;
+    this.speed = Math.pow(this.speed,2); // 제곱근
+    setTimeout(function(){
+        _this.speed = Math.sqrt(_this.speed); //루트
+        _this.engine.movement(_this.speed);
+        _this.backWheel.rotate(_this.name, _this.engine.horsePower);
+        console.log("부스트 해제 / " + _this.speed)
+    }, 3000);
+    this.engine.movement(this.speed);
+    this.backWheel.rotate(this.name, this.engine.horsePower);
+    console.log("부스트 온!!!!!! / " + this.speed)
+}
+
+function Frame(material){//자동차 골격(프레임) 공장
+    this.material = material || "steel";
+    this.shaped = (function(){//.car:after에다 clearfix를 못해서 골격 프래임으로 높이값 주어서 사용.. 뭔소리지ㅋㅋ
+        var f = document.createElement("div");
+        f.setAttribute("class","Frame");
+        f.style.width = "400px";
+        f.style.height = "230px";
+        return f;
+    })();
+}
+
+var Engine = (function(){//엔진 공장
+    var cnt = 0;
+    function Engine(){
+        this.serial = cnt++;
+        this.visual = (function(s){//실제 엔진 모양 
+            var e = document.createElement("div");
+            e.setAttribute("class","Engine");
+            e.innerHTML = "serial : " + s;
+            e.style.textAlign = "center";
+            e.style.lineHeight = "70px"
+            e.style.width = "140px",
+            e.style.height = "70px";
+            e.style.borderRadius = "20px"
+            e.style.backgroundColor = "white";
+            e.style.border = "2px dashed black";
+            e.style.opacity = "0.5"
+            return e;
+        })(this.serial)
+        return this.serial;
+    }
+    Engine.prototype.movement = function(speed){
+        this.horsePower = speed; // 속도값을 마력으로 변환 지금은 그냥 대입이지만 만약에 단위나 값의 크기를 변화 시킬 수도 있으니까 요렇게 저장
+    }
+    return Engine;
+})();
+
+function Wheel(wheelName){//휠 공장
+    this.name = wheelName;
+    this.visual = (function(n){ //실제 바퀴 모양 
+        var w = document.createElement("div");
+        w.setAttribute("class","wheel");
+        w.innerHTML = n;
+        w.style.textAlign = "center";
+        w.style.color = "white"
+        w.style.fontSize = "10px"
+        w.style.lineHeight = "65px"
+        w.style.width = "70px",
+        w.style.height = "70px";
+        w.style.borderRadius = "35px"
+        w.style.backgroundColor = "black";
+        return w;
+    })(this.name)
+    Wheel.prototype.rotate = function(carName, horsePower){
+        var rotatePerSec;
+        var bgMoveVal;
+        if(!horsePower){// 마력이 영일 경우 멈춤
+            rotatePerSec = 0;
+            bgMoveVal = 0;
+        }else{// 값이 있을 경우 각각 필요로 하는 값으로 변환하여 전달
+            rotatePerSec = 20 - (horsePower-1)*0.2; //바퀴가 한바퀴 도는데 걸리는 시간값으로 변환 하여 전달.
+            bgMoveVal = horsePower; // 배경 움직임은 걍 전달.. 수치 계산이 너무 어렵..
+        }
+        rotatePerSec < 0 ? rotatePerSec = 0.1 : rotatePerSec //바퀴에 전달 될 에너지가 마이너스로 될 순 없으니 0.1초를 최대 값으로 해둠.
+        console.log("바퀴가 한바퀴 도는데 걸리는 시간(초) :", rotatePerSec);
+        console.log("0.016초당 이동하는 거리 :", bgMoveVal);
+        console.log(carName);
+        document.getElementById(carName).querySelectorAll(".wheel")[0].style.animationDuration = rotatePerSec+"s";//뒷바퀴야 굴러라
+        document.getElementById(carName).querySelectorAll(".wheel")[1].style.animationDuration = rotatePerSec+"s";//앞바퀴야 굴러라
+        Move(bgMoveVal);
+    }
+}
+
+function Skin(color){// 차량 겉면 제조 공장
+    this.color = color || "#c7c7c7";
+    this.visual = (function(c){//겉모양
+        var s = document.createElement("div");
+        s.setAttribute("class","skin");
+        s.style.width = "400px",
+        s.style.height = "200px";
+        s.style.backgroundColor = c;
+        return s;
+    })(this.color);
+}
+
+function Glass(width){// 차량 유리 공장
+    this.width = width || "100px";
+    this.visual = (function(w){//유리 실제 모양
+        var g = document.createElement("div");
+    g.setAttribute("class","glass");
+    g.style.width = w,
+    g.style.height = "100px";
+    g.style.backgroundColor = "skyblue";
+    g.style.border = "2px solid white";
+    return g;
+    })(this.width)
+}
+
+function Light(color){// 라이트 공장
+    this.color = color || "yellow";
+    this.visual = (function(c){//라이트 실제 모양
+        var l = document.createElement("div");
+    l.setAttribute("class","glass");
+    l.style.width = "20px",
+    l.style.height = "30px";
+    l.style.backgroundColor = c;
+    l.style.border = "2px solid white";
+    return l;
+    })(this.color)
+}
+
+var userSet = (function(){
+    function userSet(){//사용자 설정 (백그라운드 이미지 교체 또는 방향키 설정)
+        this.maual = function(methodName){
+            
+            if(methodName === "bg"){
+                txt = "사용법 : userSet.bg(\'이미지경로\')"
+            }else if(methodName === "key"){
+                txt = "사용법 : userSet.key(\'left\' 또는 \'right\' 또는 \'shift\' , 사용할 인스턴스명, \'사용할 인스턴스의 메소드\' ) "
+                txt += ":::::::::: 예시 : userSet.key(\'right\', car, \'speedUp\');" 
+            }else{
+                txt = "userSet.maual(\'메소드\') 로 검색, 현재 메소드, bg, ket"
+            }
+            return txt;
+        }
+        this.bg = function(img){
+            document.getElementsByTagName("body")[0].style.backgroundImage = "url("+img+")"
+        }
+        this.key = function(key, newer, callback){
+            var keyCode = {
+                right: 39,
+                left: 37,
+                shift: 16
+            }
+            document.addEventListener('keyup', function(e){
+            if(e.keyCode === keyCode[key]){
+                console.log(callback);
+                newer[callback]();
+            }
+            });
+        }
+    }
+    return new userSet();
+})()
+
+var car = new Car("Tayo",
+    new Frame(), //골격
+    new Engine(), //엔진
+    new Wheel("넥센 타이어"), //앞바퀴
+    new Wheel("넥센 타이어"), //뒷바퀴
+    new Skin("#c8fdff"), //겉면
+    new Glass("70px"), //앞유리
+    new Glass(), //옆유리
+    new Light("#ff9000") //상향등
+);
+
+// var car2 = new Car("Tayo2",
+//     new Frame(), //골격
+//     new Engine(), //엔진
+//     new Wheel("넥센 타이어"), //앞바퀴
+//     new Wheel("넥센 타이어"), //뒷바퀴
+//     new Skin("green"), //겉면
+//     new Glass("70px"), //앞유리
+//     new Glass(), //옆유리
+//     new Light("red") //상향등
+// );
+
+userSet.bg("bg2.jpg");
+userSet.key("right", car, "speedUp");
+userSet.key("left", car, "speedDown");
+userSet.key("shift", car, "boost");
+</script>
+</body>
+</html>

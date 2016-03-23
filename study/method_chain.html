@@ -14,7 +14,7 @@
 <div class="deco">asd</div>
 </body>
 <script>
-var D = (function(){
+var $ = (function(){
 	var Common = {
 		css:function(st){//스타일 메소드
 			for( var n = 0; n < this.element.length; n++ ){
@@ -36,21 +36,21 @@ var D = (function(){
 			}
 		}
 	}
-	var D_Root = function(elem){
-		if(this instanceof D_Root){
+	var $_Root = function(elem){
+		if(this instanceof $_Root){
 			var elem = elem || ".deco";
 			this.element = document.querySelectorAll(elem);
 			return this;
 		}
-		return new D_Root(elem);
+		return new $_Root(elem);
 	}
-	D_Root.prototype = Common;
-	return D_Root;
+	$_Root.prototype = Common;
+	return $_Root;
 })();
 
-var deco1 = D("#target1").css({"color":"#ffffff", "background-color":"#000000"});
-var deco2 = D(".target2").css({"width":"400px", "height":"300px", "color":"#ffffff", "background-color":"#3884e1"}).txt("abcd").addClass("aaa");
-var deco3 = D().css({"width":"200px", "height":"200px","background-color":"#f42f32"});
+var deco1 = $("#target1").css({"color":"#ffffff", "background-color":"#000000"});
+var deco2 = $(".target2").css({"width":"400px", "height":"300px", "color":"#ffffff", "background-color":"#3884e1"}).txt("abcd").addClass("aaa");
+var deco3 = $().css({"width":"200px", "height":"200px","background-color":"#f42f32"});
 
 
 // var $ = (function(){

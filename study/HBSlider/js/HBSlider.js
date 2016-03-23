@@ -360,4 +360,4 @@ var SlideImages = (function () {
         });
     };
     return SlideImages;
-})();
+}());

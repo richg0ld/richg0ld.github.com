@@ -3,316 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <title>Document</title>
+<link rel="stylesheet" href="factory/wheel.css">
+<link rel="stylesheet" href="interface/bg.css">
 <style>
-body{background:url(bg.jpg) repeat-x 0 0;}
-.wheel{
-transform-origin:35px 35px;/*회전시킬 기준점*/
-animation:rotateSnow linear 0s infinite;animation-play-state:running;/*paused 는 멈춤*/
-}
-@keyframes rotateSnow{
-	100%{transform:rotate(360deg);} 
-}
-
-#Tayo{left:300px;top:300px;}
-#Tayo2{left:600px;top:430px;}
+#Tayo{left:300px;top:300px;} /*Tayo 차량 위치*/
 </style>
 </head>
 <body>
-
+<!--부품 공장들-->
+<script src="factory/frame.js"></script>
+<script src="factory/engine.js"></script>
+<script src="factory/wheel.js"></script>
+<script src="factory/skin.js"></script>
+<script src="factory/glass.js"></script>
+<script src="factory/light.js"></script>
+<!--차량공장은 모든 재료공장 준비가 완료되면 젤 마지막에 작업-->
+<script src="factory/Car.js"></script>
+<!--인터페이스 및 환경 설정-->
+<script src="interface/bg.js"></script>
+<script src="interface/userSet.js"></script>
+<!--맞춤형 차량 제작-->
 <script type="text/javascript">
-var pos = 0;//초기 거리 값이기 떄문에 외부에 노출이 되어도 무방 (사실 불안..ㅋㅋ 누가 바꿀 수 있기 때문)
-var Move = (function(){ //배경화면 움직임
-    var v;
-    var itv;
-    function Move(speed){
-        stop();
-        if(speed==0) return;
-        v = speed;
-        itv = setInterval(moving, 16);
-    }
-    function moving(){
-        document.getElementsByTagName("body")[0].style.backgroundPosition = -pos+"px 0px";
-        pos+=v;
-    }
-    function stop(){
-        clearInterval(itv)
-    }
-    return Move;
-})();
-
-var Car = (function(){
-    function Car(name, frame, enigne, frontWheel, backWheel, skin, frontGlass, sideGlass,light){//자동차 공장
-        var _this = this;
-        
-        this.version = "1.2.0" 
-        this.name = name; //차량 고유 이름
-        this.speed = 0; // 초기 속도값
-        this.isBoost = false; //부스트 상태
-        this.frame = frame; //골격
-        this.skin = skin; //겉면
-        this.engine = enigne; //엔진
-        this.backWheel = backWheel; //뒷바퀴
-        this.frontWheel = frontWheel; //앞바퀴
-        this.frontGlass = frontGlass; //앞유리
-        this.sideGlass = sideGlass; //옆유리
-        this.light = light; //상향등
-        
-        var assembly = (function(name){//조립
-            var car = document.createElement("div");
-            car.setAttribute("id",name);
-            
-            document.body.appendChild(car);
-            car.appendChild(_this.frame.shaped);
-            car.style.position = "absolute"
-            
-            for ( k in _this){
-                if(_this[k].visual){
-                    car.appendChild(_this[k].visual);
-                    _this[k].visual.style.position = "absolute"
-                }
-            }
-            
-            _this.skin.visual.style.left = 0;            _this.skin.visual.style.top = 0;
-            _this.engine.visual.style.left = "30px";            _this.engine.visual.style.top = "60px";
-            _this.backWheel.visual.style.left = "30px";            _this.backWheel.visual.style.top = "160px";
-            _this.frontWheel.visual.style.left = "300px";            _this.frontWheel.visual.style.top = "160px";
-            _this.frontGlass.visual.style.left = "330px";            _this.frontGlass.visual.style.top = "20px";
-            _this.sideGlass.visual.style.left = "220px";            _this.sideGlass.visual.style.top = "20px";
-            _this.light.visual.style.left = "380px";            _this.light.visual.style.top = "150px";
-        })(this.name);
-        
-        this.sensor(); //에러를 캐치하는 센서 실행;
-    }
-    return Car;
-})();
-Car.prototype.speedUp = function (value){
-    value < 0 ? value = 0 : value;
-    value >= 0 ? this.speed+=value : ++this.speed;
-    this.engine.movement(this.speed);//엔진에서 속도 값을받음.
-    this.backWheel.rotate(this.engine.horsePower); //개념을 다시 생각해보니 동력이 결국 앞바퀴 뒷바퀴 다 전달 되는게 맞는거 같음 그래서 각각 전달 하는걸로 변경
-    this.frontWheel.rotate(this.engine.horsePower); //사실 지금 속도 조절하는 모든 기능들은 중앙 제어 센서 같은걸 만들어서 해야 하지만 .. 그런거 까지하면 끝도없음.. 여튼 정확하게 하려면 중앙 관리 프로세스도 만들어서 바퀴나 엔진 관련 된건 거기서 컨트롤 하게 하는게 맞는거 같음.
-    this.dashboard();//계기판에 상태 표시
-}
-Car.prototype.speedDown = function (value){
-    value < 0 ? value = 0 : value;
-    value >= 0 ? this.speed-=value : this.speed--;
-    this.speed < 0 ? this.speed = 0 : this.speed;
-    this.engine.movement(this.speed);
-    this.backWheel.rotate(this.engine.horsePower);
-    this.frontWheel.rotate(this.engine.horsePower);
-    this.dashboard();
-}
-Car.prototype.changeSpeed = function (value){
-    value ? this.speed += value : this.speed;
-    this.speed < 0 ? this.speed = 0 : this.speed;
-    this.engine.movement(this.speed);
-    this.backWheel.rotate(this.engine.horsePower);
-    this.frontWheel.rotate(this.engine.horsePower);
-    this.dashboard();
-}
-Car.prototype.boost = function(){
-    
-    var _this = this;
-    if(this.isBoost === true) return;
-    
-    this.isBoost = true;
-    this.speed = Math.pow(this.speed,2); // 제곱근
-    setTimeout(function(){
-        _this.speed = Math.sqrt(_this.speed); //루트
-        _this.engine.movement(_this.speed);
-        _this.backWheel.rotate(_this.engine.horsePower);
-        _this.frontWheel.rotate(_this.engine.horsePower); 
-        console.log("부스트 해제 / " + _this.speed)
-        _this.isBoost = false;
-    }, 3000);
-    this.engine.movement(this.speed);
-    this.backWheel.rotate(this.engine.horsePower);
-    this.frontWheel.rotate(this.engine.horsePower); 
-    console.log("부스트 온!!!!!! / " + this.speed);
-    this.dashboard();
-}
-Car.prototype.sensor = function(){ //부품에 문제가 있는지 체크
-    var _this = this;
-    var engineSensor = setInterval(function(){ //0.05초당 엔진에 에러가 있는지 체크
-        if(_this.engine.error){//엔진에 문제 있으면 멈춤
-            console.error(_this.engine.error);
-            clearInterval(engineSensor);
-            _this.speed = 0;
-            _this.changeSpeed(0);
-        }
-    },50);
-}
-Car.prototype.dashboard = function(){ //계기판
-    console.log("현재 속도 :", this.speed);
-    console.log("바퀴가 한바퀴 도는데 걸리는 시간(초) :", this.backWheel.rotatePerSec);
-    console.log("0.016초당 이동하는 거리 :", this.backWheel.bgMoveVal);
-}
-
-function Frame(material){//자동차 골격(프레임) 공장
-    this.material = material || "steel";
-    this.shaped = (function(){//.car:after에다 clearfix를 못해서 골격 프래임으로 높이값 주어서 사용.. 뭔소리지ㅋㅋ 마크업 관련 된거니 이해안되면 무시하셔도됨
-        var f = document.createElement("div");
-        f.setAttribute("class","Frame");
-        f.style.width = "400px";
-        f.style.height = "230px";
-        return f;
-    })();
-}
-
-var Engine = (function(){//엔진 공장
-    var cnt = 0;
-    function Engine(){
-        this.serial = cnt++;
-        this.heat = 0
-        this.visual = (function(s){//실제 엔진 모양 
-            var e = document.createElement("div");
-            e.setAttribute("class","Engine");
-            e.innerHTML = "serial : " + s;
-            e.style.textAlign = "center";
-            e.style.lineHeight = "70px"
-            e.style.width = "140px",
-            e.style.height = "70px";
-            e.style.borderRadius = "20px"
-            e.style.backgroundColor = "white";
-            e.style.border = "2px dashed black";
-            e.style.opacity = "0.5"
-            return e;
-        })(this.serial)
-    }
-    Engine.prototype.movement = function(speed){
-        this.horsePower = speed; // 속도값을 마력으로 변환 지금은 그냥 대입이지만 만약에 단위나 값의 크기를 변화 시킬 수도 있으니까 요렇게 저장
-        this.heat = speed;
-        this.getHeat(this.heat);
-    }
-    Engine.prototype.getHeat = function(heat){//열을 받는다.
-        var _this = this;
-        if(heat >= 150 && _this.visual.style.backgroundColor === "white"){ //150도가 넘는데 엔진이 정상이라면
-            b = 255;
-            var Heating = setInterval(function(){ //열받기 시작 하여
-                _this.visual.style.backgroundColor = "rgb(255,255,"+b+")"; //점점 노랗게 변하기 시작한다. blue값이 0.05초당 1씩 감소 (그래야 노랭이가됨)
-                if (b===0){ //blue값이 0이 되면
-                    clearInterval(Heating);//히팅을 멈추고 
-                    _this.heat >= 150 ? _this.overHeat(_this.heat) : _this.visual.style.backgroundColor = "white" // 여전히 온도가 높으면 오버히트가 된다.
-                    return;
-                }
-                b--;
-            }, 10);
-        }
-    }
-    Engine.prototype.overHeat = function(heat){//오버 히트가 되면
-        var _this = this;
-        this.visual.style.backgroundColor = "red"; //엔진이 뻘개짐
-        var overHeating = setTimeout(function(){
-            if(_this.heat >= 150){
-              _this.movement = function(){
-                  _this.horsePower = 0; 
-                  _this.heat = 0;
-                  _this.getHeat(0);
-              }
-              _this.error = "엔진과열";
-              console.error("적당히좀 달리지 망가짐여!!");
-            }else{
-              _this.visual.style.backgroundColor = "white";
-              console.log("엔진 상태 안정화 ");
-            }
-        },3000);
-    }
-    return Engine;
-})();
-
-function Wheel(wheelName){//휠 공장
-    this.name = wheelName;
-    this.visual = (function(n){ //실제 바퀴 모양 
-        var w = document.createElement("div");
-        w.setAttribute("class","wheel");
-        w.innerHTML = n;
-        w.style.textAlign = "center";
-        w.style.color = "white"
-        w.style.fontSize = "10px"
-        w.style.lineHeight = "65px"
-        w.style.width = "70px",
-        w.style.height = "70px";
-        w.style.borderRadius = "35px"
-        w.style.backgroundColor = "black";
-        return w;
-    })(this.name)
-    Wheel.prototype.rotate = function(horsePower){
-        var rotatePerSec;
-        var bgMoveVal;
-        if(!horsePower){// 마력이 영일 경우 멈춤
-            rotatePerSec = 0;
-            bgMoveVal = 0;
-        }else{// 값이 있을 경우 각각 필요로 하는 값으로 변환하여 전달
-            rotatePerSec = 20 - (horsePower-1)*0.3; //바퀴가 한바퀴 도는데 걸리는 시간값으로 변환 하여 전달.
-            bgMoveVal = horsePower; // 배경 움직임은 걍 전달.. 수치 계산이 너무 어렵..
-        }
-        rotatePerSec < 0 ? rotatePerSec = 0.1 : rotatePerSec //바퀴에 전달 될 에너지가 마이너스로 될 순 없으니 0.1초를 최대 값으로 해둠.
-        this.visual.style.animationDuration = rotatePerSec+"s";//바퀴야 굴러라
-        Move(bgMoveVal);
-        
-        this.horsePower = horsePower, this.rotatePerSec = rotatePerSec, this.bgMoveVal = bgMoveVal // 계기판 전달용
-    }
-}
-
-function Skin(color){// 차량 겉면 제조 공장
-    this.color = color || "#c7c7c7";
-    this.visual = (function(c){//겉모양
-        var s = document.createElement("div");
-        s.setAttribute("class","skin");
-        s.style.width = "400px",
-        s.style.height = "200px";
-        s.style.backgroundColor = c;
-        return s;
-    })(this.color);
-}
-
-function Glass(width){// 차량 유리 공장
-    this.width = width || "100px";
-    this.visual = (function(w){//유리 실제 모양
-        var g = document.createElement("div");
-    g.setAttribute("class","glass");
-    g.style.width = w,
-    g.style.height = "100px";
-    g.style.backgroundColor = "skyblue";
-    g.style.border = "2px solid white";
-    return g;
-    })(this.width)
-}
-
-function Light(color){// 라이트 공장
-    this.color = color || "yellow";
-    this.visual = (function(c){//라이트 실제 모양
-        var l = document.createElement("div");
-    l.setAttribute("class","glass");
-    l.style.width = "20px",
-    l.style.height = "30px";
-    l.style.backgroundColor = c;
-    l.style.border = "2px solid white";
-    return l;
-    })(this.color)
-}
-
-var userSet = (function(){
-    function userSet(){//사용자 설정 (백그라운드 이미지 교체 또는 방향키 설정)
-        this.bg = function(img){
-            document.getElementsByTagName("body")[0].style.backgroundImage = "url("+img+")"
-        }
-        this.key = function(key, newer, callback){
-            var keyCode = {
-                right: 39,
-                left: 37,
-                shift: 16
-            }
-            document.addEventListener('keyup', function(e){
-            if(e.keyCode === keyCode[key]){
-                newer[callback]();
-            }
-            });
-        }
-    }
-    return new userSet();
-})()
-
 var car = new Car("Tayo",
     new Frame(), //골격
     new Engine(), //엔진
@@ -323,22 +34,14 @@ var car = new Car("Tayo",
     new Glass(), //옆유리
     new Light("#ff9000") //상향등
 );
-
-// var car2 = new Car("Tayo2",
-//     new Frame(), 
-//     new Engine(), 
-//     new Wheel("넥센 타이어"), 
-//     new Wheel("넥센 타이어"), 
-//     new Skin("green"), 
-//     new Glass("70px"), 
-//     new Glass(), 
-//     new Light("red")
-// );
-
-userSet.bg("bg3.jpg");
+</script>
+<!--유저 인터페이스 설정-->
+<script type="text/javascript">
+userSet.bg("./bg3.jpg");
 userSet.key("right", car, "speedUp");
 userSet.key("left", car, "speedDown");
 userSet.key("shift", car, "boost");
 </script>
+<!--차량 하나 만드는데 이정도로 많은 과정이 뒤에서 일어남-->
 </body>
 </html>

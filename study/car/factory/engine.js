@@ -18,6 +18,9 @@ var Engine = (function(){//엔진 공장
             return e;
         })(this.serial)
     }
+    Engine.prototype.gainEnergy = function(fuel){
+        this.energy = fuel*10;
+    }
     Engine.prototype.movement = function(speed){
         this.horsePower = speed; // 속도값을 마력으로 변환 지금은 그냥 대입이지만 만약에 단위나 값의 크기를 변화 시킬 수도 있으니까 요렇게 저장
         this.heat = speed;

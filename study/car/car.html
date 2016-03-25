@@ -17,6 +17,7 @@
 <script src="factory/skin.js"></script>
 <script src="factory/glass.js"></script>
 <script src="factory/light.js"></script>
+<script src="factory/FuelTank.js"></script>
 <!--차량공장은 모든 재료공장 준비가 완료되면 젤 마지막에 작업-->
 <script src="factory/Car.js"></script>
 <!--인터페이스 및 환경 설정-->
@@ -32,7 +33,8 @@ var car = new Car("Tayo",
     new Skin("#c8fdff"), //겉면
     new Glass("70px"), //앞유리
     new Glass(), //옆유리
-    new Light("#ff9000") //상향등
+    new Light("#ff9000"), //상향등
+    new FuelTank("oil") //연료탱크
 );
 </script>
 <!--유저 인터페이스 설정-->

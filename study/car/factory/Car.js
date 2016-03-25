@@ -1,13 +1,14 @@
 var Car = (function(){
-    function Car(name, frame, enigne, frontWheel, backWheel, skin, frontGlass, sideGlass,light){//자동차 공장
+    function Car(name, frame, enigne, frontWheel, backWheel, skin, frontGlass, sideGlass,light, fuelTank){//자동차 공장
         var _this = this;
         
-        this.version = "1.3.0" 
+        this.version = "1.4.0" 
         this.name = name; //차량 고유 이름
         this.speed = 0; // 초기 속도값
         this.isBoost = false; //부스트 상태
         this.frame = frame; //골격
         this.skin = skin; //겉면
+        this.fuelTank = fuelTank //연료탱크
         this.engine = enigne; //엔진
         this.backWheel = backWheel; //뒷바퀴
         this.frontWheel = frontWheel; //앞바퀴
@@ -37,6 +38,7 @@ var Car = (function(){
             _this.frontGlass.visual.style.left = "330px";            _this.frontGlass.visual.style.top = "20px";
             _this.sideGlass.visual.style.left = "220px";            _this.sideGlass.visual.style.top = "20px";
             _this.light.visual.style.left = "380px";            _this.light.visual.style.top = "150px";
+            _this.fuelTank.visual.style.left = "160px";            _this.fuelTank.visual.style.top = "140px";
         })(this.name);
         
         this.sensor(); //에러를 캐치하는 센서 실행;
@@ -44,6 +46,7 @@ var Car = (function(){
     Car.prototype.speedUp = function (value){
         value < 0 ? value = 0 : value;
         value >= 0 ? this.speed+=value : ++this.speed;
+        this.fuelTank.supply(this.engine, "gainEnergy", this.speed);
         this.engine.movement(this.speed);//엔진에서 속도 값을받음.
         this.backWheel.rotate(this.engine.horsePower); //개념을 다시 생각해보니 동력이 결국 앞바퀴 뒷바퀴 다 전달 되는게 맞는거 같음 그래서 각각 전달 하는걸로 변경
         this.frontWheel.rotate(this.engine.horsePower); //사실 지금 속도 조절하는 모든 기능들은 중앙 제어 센서 같은걸 만들어서 해야 하지만 .. 그런거 까지하면 끝도없음.. 여튼 정확하게 하려면 중앙 관리 프로세스도 만들어서 바퀴나 엔진 관련 된건 거기서 컨트롤 하게 하는게 맞는거 같음.
@@ -53,6 +56,7 @@ var Car = (function(){
         value < 0 ? value = 0 : value;
         value >= 0 ? this.speed-=value : this.speed--;
         this.speed < 0 ? this.speed = 0 : this.speed;
+        this.fuelTank.supply(this.engine, "gainEnergy", this.speed);
         this.engine.movement(this.speed);
         this.backWheel.rotate(this.engine.horsePower);
         this.frontWheel.rotate(this.engine.horsePower);
@@ -61,6 +65,7 @@ var Car = (function(){
     Car.prototype.changeSpeed = function (value){
         value ? this.speed += value : this.speed;
         this.speed < 0 ? this.speed = 0 : this.speed;
+        this.fuelTank.supply(this.engine, "gainEnergy", this.speed);
         this.engine.movement(this.speed);
         this.backWheel.rotate(this.engine.horsePower);
         this.frontWheel.rotate(this.engine.horsePower);
@@ -75,12 +80,14 @@ var Car = (function(){
         this.speed = Math.pow(this.speed,2); // 제곱근
         setTimeout(function(){
             _this.speed = Math.sqrt(_this.speed); //루트
+            _this.fuelTank.supply(_this.engine, "gainEnergy", _this.speed);
             _this.engine.movement(_this.speed);
             _this.backWheel.rotate(_this.engine.horsePower);
             _this.frontWheel.rotate(_this.engine.horsePower); 
             console.warn("부스트 해제 / " + _this.speed)
             _this.isBoost = false;
         }, 3000);
+        this.fuelTank.supply(this.engine, "gainEnergy", this.speed);
         this.engine.movement(this.speed);
         this.backWheel.rotate(this.engine.horsePower);
         this.frontWheel.rotate(this.engine.horsePower); 
@@ -89,6 +96,16 @@ var Car = (function(){
     }
     Car.prototype.sensor = function(){ //부품에 문제가 있는지 체크
         var _this = this;
+        var fuelSensor = setInterval(function(){//연료량체크
+            if(_this.fuelTank.error){
+                console.error("센서알림 :", _this.fuelTank.error);
+                _this.fuelTank.supply(_this.engine, "gainEnergy", 0);
+                _this.engine.movement(0);
+                _this.speed = 0;
+                _this.backWheel.rotate(0);
+                _this.frontWheel.rotate(0);
+            }
+        }, 50);
         var engineSensor = setInterval(function(){ //0.05초당 엔진에 에러가 있는지 체크
             if(_this.engine.error){//엔진에 문제 있으면 멈춤
                 console.error("센서알림 :", _this.engine.error);

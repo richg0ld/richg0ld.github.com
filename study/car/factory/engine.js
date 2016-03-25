@@ -41,15 +41,15 @@ var Engine = (function(){//엔진 공장
     Engine.prototype.overHeat = function(heat){//오버 히트가 되면
         var _this = this;
         this.visual.style.backgroundColor = "red"; //엔진이 뻘개짐
+        var warn = setInterval(function(){
+            console.error("위험!! 속도를 줄이십시오!")
+            console.warn("위험!! 속도를 줄이십시오!")
+        },700);
         var overHeating = setTimeout(function(){
+            clearInterval(warn);
             if(_this.heat >= 150){
-              _this.movement = function(){
-                  _this.horsePower = 0; 
-                  _this.heat = 0;
-                  _this.getHeat(0);
-              }
+              _this.movement = NaN;
               _this.error = "엔진과열";
-              console.error("적당히좀 달리지 망가짐여!!");
             }else{
               _this.visual.style.backgroundColor = "white";
               console.debug("엔진 상태 안정화 ");

@@ -2,7 +2,7 @@ var Car = (function(){
     function Car(name, frame, enigne, frontWheel, backWheel, skin, frontGlass, sideGlass,light){//자동차 공장
         var _this = this;
         
-        this.version = "1.2.0" 
+        this.version = "1.3.0" 
         this.name = name; //차량 고유 이름
         this.speed = 0; // 초기 속도값
         this.isBoost = false; //부스트 상태
@@ -91,10 +91,14 @@ var Car = (function(){
         var _this = this;
         var engineSensor = setInterval(function(){ //0.05초당 엔진에 에러가 있는지 체크
             if(_this.engine.error){//엔진에 문제 있으면 멈춤
-                console.error(_this.engine.error);
+                console.error("센서알림 :", _this.engine.error);
                 clearInterval(engineSensor);
-                _this.speed = 0;
-                _this.changeSpeed(0);
+                _this.speed = NaN;
+                _this.backWheel.rotate(0);
+                _this.frontWheel.rotate(0);
+                for (k in _this){
+                    if(typeof _this[k] === "object" && k !== "frame") _this.explosion(k); //차 폭팔!!
+                }
             }
         },50);
     }
@@ -102,6 +106,37 @@ var Car = (function(){
         console.log("현재 속도 :", this.speed);
         console.log("바퀴가 한바퀴 도는데 걸리는 시간(초) :", this.backWheel.rotatePerSec);
         console.log("0.016초당 이동하는 거리 :", this.backWheel.bgMoveVal);
+    }
+    Car.prototype.explosion = function(component){ //폭발 .. 차량 폭파를 프로토타입 기능으로 넣는게 약간 이상하긴 하다..
+        var _this = this;
+        var p={
+            left:parseInt(this[component].visual.style.left),
+            top:parseInt(this[component].visual.style.top)
+        }
+        var d={
+            left:0,
+            top:0
+        }
+        
+        for ( k in d ){
+            var r = Math.floor(Math.random()*10);
+            if(r === 0){
+                d[k] = 0
+            }else if( r >= 1 && r < 5 ){
+                d[k] = -10
+            }else if(r >= 5 && r < 10){
+                d[k] = 10
+            }
+        }
+        
+        var explosing = setInterval(function(){
+            _this[component].visual.style.left = (p.left+=d.left)+"px" ;
+            _this[component].visual.style.top = (p.top+=d.top)+"px" ;
+        },1)
+        
+        setTimeout(function(){
+            clearInterval(explosing);
+        },100);
     }
     return Car;
 })();

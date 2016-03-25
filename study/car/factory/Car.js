@@ -46,7 +46,7 @@ var Car = (function(){
     Car.prototype.speedUp = function (value){
         value < 0 ? value = 0 : value;
         value >= 0 ? this.speed+=value : ++this.speed;
-        this.fuelTank.supply(this.engine, "gainEnergy", this.speed);
+        this.fuelTank.supply(this.engine, "gainEnergy", this.speed); //연료탱크의 공급소에서 엔진에 에너지로 스피드 값에 알맞는 연료 주입
         this.engine.movement(this.speed);//엔진에서 속도 값을받음.
         this.backWheel.rotate(this.engine.horsePower); //개념을 다시 생각해보니 동력이 결국 앞바퀴 뒷바퀴 다 전달 되는게 맞는거 같음 그래서 각각 전달 하는걸로 변경
         this.frontWheel.rotate(this.engine.horsePower); //사실 지금 속도 조절하는 모든 기능들은 중앙 제어 센서 같은걸 만들어서 해야 하지만 .. 그런거 까지하면 끝도없음.. 여튼 정확하게 하려면 중앙 관리 프로세스도 만들어서 바퀴나 엔진 관련 된건 거기서 컨트롤 하게 하는게 맞는거 같음.
@@ -124,37 +124,37 @@ var Car = (function(){
         console.log("바퀴가 한바퀴 도는데 걸리는 시간(초) :", this.backWheel.rotatePerSec);
         console.log("0.016초당 이동하는 거리 :", this.backWheel.bgMoveVal);
     }
-    Car.prototype.addFuel = function(){
+    Car.prototype.addFuel = function(){//연료 주입 (자기자신이 자가로 연료를 주입하고있다.. 이 역시 이상하지만 넣었다.)
         this.fuelTank.volume+=100
     }
     Car.prototype.explosion = function(component){ //폭발 .. 차량 폭파를 프로토타입 기능으로 넣는게 약간 이상하긴 하다..
         var _this = this;
-        var p={
+        var p={ //현재의 구성품 위치값을 p객체에 저장
             left:parseInt(this[component].visual.style.left),
             top:parseInt(this[component].visual.style.top)
         }
-        var d={
+        var d={ //날아갈 방향 초기값 d객체 생성
             left:0,
             top:0
         }
         
-        for ( k in d ){
+        for ( k in d ){ // d 객체 값을 랜덤으로 지정
             var r = Math.floor(Math.random()*10);
             if(r === 0){
-                d[k] = 0
+                d[k] = 0 //원래 그 자리
             }else if( r >= 1 && r < 5 ){
-                d[k] = -10
+                d[k] = -10 // 위 또는 왼쪽 방향
             }else if(r >= 5 && r < 10){
-                d[k] = 10
+                d[k] = 10 // 아래 또는 오른쪽 방향
             }
         }
         
-        var explosing = setInterval(function(){
-            _this[component].visual.style.left = (p.left+=d.left)+"px" ;
+        var explosing = setInterval(function(){ //0.001초당 각 방향으로 10씩 움직인다.
+            _this[component].visual.style.left = (p.left+=d.left)+"px" ; 
             _this[component].visual.style.top = (p.top+=d.top)+"px" ;
         },1)
         
-        setTimeout(function(){
+        setTimeout(function(){//그러다 0.1초후 멈춘다.
             clearInterval(explosing);
         },100);
     }

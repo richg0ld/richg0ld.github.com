@@ -4,7 +4,7 @@ var FuelTank = (function(){
         var _this = this
 
         this.fuel = fuel || "gasoline";
-        this.volume = 700;//연료양
+        this.volume = 500;//연료양
         this.Consumption = 0;
         this.visual = (function(f){ // 연료탱크 모양
             var ft = document.createElement("div");
@@ -24,12 +24,12 @@ var FuelTank = (function(){
 
         this.status();// 연료탱크 상태를 실행 시킴
     }
-    FuelTank.prototype.supply = function(engine, gainEnergy, speed){
+    FuelTank.prototype.supply = function(engine, gainEnergy, speed){// 연료 공급
         var _this = this;
-        this.consume(speed);
-        engine[gainEnergy](this.Consumption);
-        consumePerSec ? clearInterval(consumePerSec) : "";
-        consumePerSec = setInterval(function(){
+        this.consume(speed); //공급 초기에 바로 소비
+        engine[gainEnergy](this.Consumption); // 엔진인자의 에너지얻기 메소드에 소모되는 연료를 전달
+        consumePerSec ? clearInterval(consumePerSec) : ""; //**첫 실행시에는 인터벌을 초기화 할핑요 없이 아래 인터벌을 실행, 이후로 연료공급 함수가 실행될 때는 기존의 인터벌을 종료하고
+        consumePerSec = setInterval(function(){//**다시 인터벌을 실행한다.(consumePerSec 변수 선언은 맨~ 위에 있음.)
             _this.consume(speed);
         },1000);
     }
@@ -49,16 +49,16 @@ var FuelTank = (function(){
     }
     FuelTank.prototype.status = function(){//연료 탱크 상태를 매0.1초 때마 확인 함 
         var _this = this;
-        var checking = setInterval(stat,100);
-        function stat(){
+        var checking = setInterval(function(){
             if(_this.volume <= 0){
                 _this.volume = 0;
-                _this.error = "연료부족 car.fuelTank.volume = 연료양으로 충전하세요" 
+                _this.error = "연료부족" 
             }else{
                 _this.error = undefined;//연료가 있으면 오류 제거
             }
             _this.visual.innerHTML = _this.volume;//확인된 연료 값을 뿌려줌
-        }
+        },100);
+
     }
     return FuelTank;
 })()

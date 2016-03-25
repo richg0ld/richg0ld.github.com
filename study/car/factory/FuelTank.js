@@ -4,17 +4,16 @@ var FuelTank = (function(){
         var _this = this
 
         this.fuel = fuel || "gasoline";
-        this.volume = 50;
+        this.volume = 700;//연료양
         this.Consumption = 0;
         this.visual = (function(f){ // 연료탱크 모양
-            console.log(_this);
             var ft = document.createElement("div");
             ft.setAttribute("class","wheel");
             ft.innerHTML = _this.volume;
             ft.style.textAlign = "center";
             ft.style.color = "white"
-            ft.style.fontSize = "10px"
-            ft.style.lineHeight = "65px"
+            ft.style.fontSize = "14px"
+            ft.style.lineHeight = "50px"
             ft.style.width = "120px",
             ft.style.height = "50px";
             ft.style.borderRadius = "35px"
@@ -54,7 +53,7 @@ var FuelTank = (function(){
         function stat(){
             if(_this.volume <= 0){
                 _this.volume = 0;
-                _this.error = "연료부족" 
+                _this.error = "연료부족 car.fuelTank.volume = 연료양으로 충전하세요" 
             }else{
                 _this.error = undefined;//연료가 있으면 오류 제거
             }

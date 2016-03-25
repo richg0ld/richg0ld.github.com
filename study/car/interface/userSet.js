@@ -7,7 +7,8 @@ var userSet = (function(){
             var keyCode = {
                 right: 39,
                 left: 37,
-                shift: 16
+                shift: 16,
+                space: 32
             }
             document.addEventListener('keyup', function(e){
             if(e.keyCode === keyCode[key]){

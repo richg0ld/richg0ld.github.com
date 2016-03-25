@@ -124,6 +124,9 @@ var Car = (function(){
         console.log("바퀴가 한바퀴 도는데 걸리는 시간(초) :", this.backWheel.rotatePerSec);
         console.log("0.016초당 이동하는 거리 :", this.backWheel.bgMoveVal);
     }
+    Car.prototype.addFuel = function(){
+        this.fuelTank.volume+=100
+    }
     Car.prototype.explosion = function(component){ //폭발 .. 차량 폭파를 프로토타입 기능으로 넣는게 약간 이상하긴 하다..
         var _this = this;
         var p={

@@ -52,7 +52,7 @@ var Engine = (function(){//엔진 공장
               console.error("적당히좀 달리지 망가짐여!!");
             }else{
               _this.visual.style.backgroundColor = "white";
-              console.log("엔진 상태 안정화 ");
+              console.debug("엔진 상태 안정화 ");
             }
         },3000);
     }

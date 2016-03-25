@@ -78,13 +78,13 @@ var Car = (function(){
             _this.engine.movement(_this.speed);
             _this.backWheel.rotate(_this.engine.horsePower);
             _this.frontWheel.rotate(_this.engine.horsePower); 
-            console.log("부스트 해제 / " + _this.speed)
+            console.warn("부스트 해제 / " + _this.speed)
             _this.isBoost = false;
         }, 3000);
         this.engine.movement(this.speed);
         this.backWheel.rotate(this.engine.horsePower);
         this.frontWheel.rotate(this.engine.horsePower); 
-        console.log("부스트 온!!!!!! / " + this.speed);
+        console.warn("부스트 온!!!!!! / " + this.speed);
         this.dashboard();
     }
     Car.prototype.sensor = function(){ //부품에 문제가 있는지 체크

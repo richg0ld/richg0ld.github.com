@@ -8,7 +8,7 @@ var FuelTank = (function(){
         this.Consumption = 0;
         this.visual = (function(f){ // 연료탱크 모양
             var ft = document.createElement("div");
-            ft.setAttribute("class","wheel");
+            ft.setAttribute("class","fuelTank");
             ft.innerHTML = _this.volume;
             ft.style.textAlign = "center";
             ft.style.color = "white"

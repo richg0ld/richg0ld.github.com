@@ -3,8 +3,9 @@
  <head>
   <meta charset="UTF-8">
   <title>Favorites</title>
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <script src="libs/angular/angular.js"></script>
+  
   <script>
       angular.module("favoritesApp",[]).
       controller("favoritesCtrl",["$scope",function($scope){
@@ -30,13 +31,13 @@
  <body class="well" ng-controller="favoritesCtrl" >
      <h1>{{title}}</h1>
      <form ng-submit="addAddress(insertText)">
-         <input type="text" name="address" ng-model="insertText" >
+         <input class="form-control" type="text" name="address" ng-model="insertText" >
      </form>
-     <p>등록된 개수 : {{list.length}}</p>
-     <ul>
-         <li ng-repeat="v in list" >
-             <a href="{{v.address}}">{{v.address}}</a>
-             <button ng-click="delAddress($index)">삭제</button>
+     <p style="padding:5px;border-radius:4px;margin-top:10px;font-weight:bold" class="bg-info text-info">등록된 개수 : {{list.length}}</p>
+     <ul class="list-unstyled">
+         <li style="height:30px" ng-repeat="v in list" >
+             <a class="text-info" href="{{v.address}}">{{v.address}}</a>
+             <button style="float:right;" class="btn btn-primary btn-xs" ng-click="delAddress($index)">삭제</button>
          </li>
      </ul>
  </body>

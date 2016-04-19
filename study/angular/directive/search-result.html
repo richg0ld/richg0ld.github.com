@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <!--<div class="panel-title">
+            {{convertToDate(w.dt) | date : 'yyyy-MM-dd'}}
+        </div>-->
+        <div class="panel-title">
+            {{convertToDateInDirective({date : dayForecast.dt}) | date : dateFormat }}
+            <!-- directive에서 함수는 함수안에 객체로 한번 묶어주어고 key 값을 추가해주어야 한다. -->
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="panel-text">
+            <p>{{convertToCelsius(w.temp.day)}}</p>
+            <ng-transclude></ng-transclude>
+        </div>
+    </div>
+</div>

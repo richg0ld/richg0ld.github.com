@@ -5,29 +5,25 @@
     <title>AngularJS</title>
     <link rel="stylesheet" href="libs/bootstrap.min.css">
     <script src="libs/angular.min.js"></script>
-    <script src="libs/angular/angular-resource.js"></script>
-    <script src="libs/angular/angular-route.js"></script>
-    <script>
-        angular.module('weatherApp',['ngRoute', 'ngResource']).
-        controller('mainCtrl',function($scope, $resource){
-            $scope.weatherAPI = $resource('',{}); //뭐 어떻게 넣었더라 기억안남...
-            console.log($scope.weatherAPI);
-            $scope.countrys = ['Seoul', 'Tokyo', 'NewYork', 'Shanghai'];
-            $scope.clickIdx = 0;
-            $scope.showChart = function(idx){ //버튼 클릭 시
-                $scope.clickIdx = idx;
-            };
-        });
-    </script>
+    <script src="libs/angular-resource.js"></script>
+    <script src="libs/angular-route.js"></script>
+    <script src="app.js"></script>
 </head>
-<body ng-controller="mainCtrl">
-    <ul class="list-unstyled clearfix">
-        <li class="pull-left" ng-repeat="country in countrys">
-            <button class="btn btn-default"
-                    ng-class="{'btn-info':$index === clickIdx}"
-                    ng-click="showChart($index)"
-            >{{country}}</button>
-        </li>
-    </ul>
+<body>
+<header>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">WeatherApp</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#/"><i class="fa"></i>Home</a></li>
+                <li><a href="#/forecast"><i class="fa"></i>Forecasst</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="container" ng-view>
+</div>
 </body>
 </html>

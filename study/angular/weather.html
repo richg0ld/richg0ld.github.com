@@ -14,8 +14,7 @@
         angular.module('weatherApp',['chart.js','ngRoute', 'ngResource']).
         controller('mainCtrl',function($scope, $resource){
             $scope.countrys = ['Seoul', 'Tokyo', 'NewYork', 'Shanghai'];
-            $scope.clickIdx = 0;
-            $scope.city = $scope.countrys[$scope.clickIdx];
+            $scope.city = $scope.countrys[0];
             $scope.cnt = '7';
             $scope.appId = '8d554a626fc5d01d77812b612a6de257';
             $scope.weatherAPI = $resource('http://api.openweathermap.org/data/2.5/forecast/daily',{
@@ -30,18 +29,18 @@
             $scope.legend = true;
             $scope.series = ['일주일 날씨'];
             $scope.weatherResult = $scope.weatherAPI.get({q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId},function(){
-                for (var k in $scope.weatherResult.list){
-                    $scope.cityTemp[0][k] = Math.round($scope.weatherResult.list[k].temp.day - 273.15);
-                    $scope.cityDate[k] = new Date($scope.weatherResult.list[k].dt * 1000).getDate();
+                for (var i=0; i < $scope.cnt; i++){
+                    $scope.cityTemp[0][i] = Math.round($scope.weatherResult.list[i].temp.day - 273.15);
+                    $scope.cityDate[i] = new Date($scope.weatherResult.list[i].dt * 1000).getDate();
                 }
             });
-            $scope.showChart = function(idx){ //버튼 클릭 시
-                $scope.clickIdx = idx;
-                $scope.city = $scope.countrys[idx];
+            $scope.showChart = function(city){ //버튼 클릭 시
+                $scope.city = city;
                 $scope.weatherResult = $scope.weatherAPI.get({q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId},function(){
-                    for (var k in $scope.weatherResult.list){
-                        $scope.cityTemp[0][k] = Math.round($scope.weatherResult.list[k].temp.day - 273.15);
-                        $scope.cityDate[k] = new Date($scope.weatherResult.list[k].dt * 1000).getDate();
+                    if(!$scope.weatherResult.cnt) return; // 호출 속도가 느릴 때
+                    for (var j=0; j < $scope.cnt; j++){
+                        $scope.cityTemp[0][j] = Math.round($scope.weatherResult.list[j].temp.day - 273.15);
+                        $scope.cityDate[j] = new Date($scope.weatherResult.list[j].dt * 1000).getDate();
                     }
                 });
             };
@@ -53,8 +52,8 @@
     <ul class="list-unstyled clearfix">
         <li class="pull-left" ng-repeat="country in countrys">
             <button class="btn btn-default"
-                    ng-class="{'btn-info':$index === clickIdx}"
-                    ng-click="showChart($index)"
+                    ng-class="{'btn-info':country === city}"
+                    ng-click="showChart(country)"
             >{{country}}</button>
         </li>
     </ul>

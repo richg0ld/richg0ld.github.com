@@ -4,23 +4,52 @@
     <meta charset="UTF-8">
     <title>AngularJS</title>
     <link rel="stylesheet" href="libs/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/angular-chart.css">
+    <script src="libs/chart.js"></script>
     <script src="libs/angular.min.js"></script>
     <script src="libs/angular/angular-resource.js"></script>
     <script src="libs/angular/angular-route.js"></script>
+    <script src="libs/angular-chart.js"></script>
     <script>
-        angular.module('weatherApp',['ngRoute', 'ngResource']).
+        angular.module('weatherApp',['chart.js','ngRoute', 'ngResource']).
         controller('mainCtrl',function($scope, $resource){
-            $scope.weatherAPI = $resource('',{}); //뭐 어떻게 넣었더라 기억안남...
-            console.log($scope.weatherAPI);
             $scope.countrys = ['Seoul', 'Tokyo', 'NewYork', 'Shanghai'];
             $scope.clickIdx = 0;
+            $scope.city = $scope.countrys[$scope.clickIdx];
+            $scope.cnt = '7';
+            $scope.appId = '8d554a626fc5d01d77812b612a6de257';
+            $scope.weatherAPI = $resource('http://api.openweathermap.org/data/2.5/forecast/daily',{
+                callback : 'JSON_CALLBACK'
+            },{
+                get : {
+                    method : 'JSONP'
+                }
+            });
+            $scope.cityTemp = [[]];
+            $scope.cityDate =[];
+            $scope.legend = true;
+            $scope.series = ['일주일 날씨'];
+            $scope.weatherResult = $scope.weatherAPI.get({q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId},function(){
+                for (var k in $scope.weatherResult.list){
+                    $scope.cityTemp[0][k] = Math.round($scope.weatherResult.list[k].temp.day - 273.15);
+                    $scope.cityDate[k] = new Date($scope.weatherResult.list[k].dt * 1000).getDate();
+                }
+            });
             $scope.showChart = function(idx){ //버튼 클릭 시
                 $scope.clickIdx = idx;
+                $scope.city = $scope.countrys[idx];
+                $scope.weatherResult = $scope.weatherAPI.get({q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId},function(){
+                    for (var k in $scope.weatherResult.list){
+                        $scope.cityTemp[0][k] = Math.round($scope.weatherResult.list[k].temp.day - 273.15);
+                        $scope.cityDate[k] = new Date($scope.weatherResult.list[k].dt * 1000).getDate();
+                    }
+                });
             };
         });
     </script>
 </head>
-<body ng-controller="mainCtrl">
+<body  ng-controller="mainCtrl">
+    <h1>{{city}}의  날씨 결과</h1>
     <ul class="list-unstyled clearfix">
         <li class="pull-left" ng-repeat="country in countrys">
             <button class="btn btn-default"
@@ -29,5 +58,11 @@
             >{{country}}</button>
         </li>
     </ul>
+    <canvas class="chart chart-line"
+            chart-data="cityTemp"
+            chart-legend="legend"
+            chart-labels="cityDate"
+            chart-series="series"
+    ></canvas>
 </body>
 </html>

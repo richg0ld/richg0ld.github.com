@@ -30,7 +30,7 @@ class Around {// 배경 및 주변 사물 클래스
             return charImage;
         })();
     }
-    render(){
+    public render(){
         this.context.drawImage(
             this.image,
             0,

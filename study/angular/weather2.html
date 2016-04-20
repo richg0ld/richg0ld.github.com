@@ -5,9 +5,73 @@
     <title>AngularJS</title>
     <link rel="stylesheet" href="libs/bootstrap.min.css">
     <script src="libs/angular.min.js"></script>
-    <script src="libs/angular-resource.js"></script>
-    <script src="libs/angular-route.js"></script>
-    <script src="app.js"></script>
+    <script src="libs/angular/angular-resource.js"></script>
+    <script src="libs/angular/angular-route.js"></script>
+    <script>
+        angular.module('weatherApp', ['ngRoute', 'ngResource'])
+        .config(function($routeProvider) {
+            $routeProvider
+                    .when('/', {
+                        templateUrl : 'pages/home.html',
+                        controller : 'HomeCtrl'
+                    })
+                    .when('/forecast', {
+                        templateUrl : 'pages/forecast.html',
+                        controller : 'ForecastCtrl'
+                    })
+                    .when('/forecast/:cnt', {
+                        templateUrl : 'pages/forecast.html',
+                        controller : 'ForecastCtrl'
+                    })
+        }).
+        service('CityService', function(){
+            this.city = 'Seoul';
+        }).
+        directive('searchResult', function(){
+            return {
+                replace : true,
+                restrict : 'E',
+                transclude : true,
+                templateUrl:'directive/search-result.html',
+                scope : {
+                    weatherData : '=',
+                    convertToDateInDirective : '&',
+                    dateFormat : '@'
+                }
+            }
+        }).
+        controller('HomeCtrl', function($scope, CityService) {
+            $scope.city = CityService.city;
+
+            $scope.$watch('city', function(newCity){
+                CityService.city = newCity;
+            })
+
+        }).
+        controller('ForecastCtrl', function($scope, CityService, $resource, $routeParams) {
+            $scope.city = CityService.city;
+            $scope.cnt = $routeParams.cnt || '2';
+            $scope.appId = '8d554a626fc5d01d77812b612a6de257';
+            $scope.weatherAPI = $resource('http://api.openweathermap.org/data/2.5/forecast/daily',{
+                callback : 'JSON_CALLBACK'
+            },{
+                get : {
+                    method : 'JSONP'
+                }
+            });
+            var data = {q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId};
+            console.log($routeParams);
+            $scope.weatherResult = $scope.weatherAPI.get(data);
+            $scope.convertToDate = function(dt) {
+                return new Date(dt * 1000);
+            };
+            $scope.convertToCelsius = function(degK){
+                return Math.round(degK - 273.15);
+            };
+
+            console.log($scope.convertToDate);
+        });
+    </script>
 </head>
 <body>
 <header>
@@ -23,7 +87,6 @@
         </div>
     </nav>
 </header>
-<div class="container" ng-view>
-</div>
+<div class="container" ng-view></div>
 </body>
 </html>

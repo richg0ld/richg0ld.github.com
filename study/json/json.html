@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>json 파싱 연습</title>
+</head>
+<body>
+
+
+<script>
+//    var json = '{"mykey": "my value"}';
+//    var data = JSON.parse(json); // json 해석, 분석
+//
+//    var dog = {
+//        name: "Fido",
+//        dob:new Date(),
+//        legs: [1, 2, 3, 4]
+//    };
+//    var jsonStr = JSON.stringify(dog);
+//
+//    var xmlHttp = new XMLHttpRequest();
+/* JSON Definition */
+var json = '{ "NAME" : "Yongwoo", "AGE" : 25, "UNIVERSITY" : "Catholic Univ, of Korea", "MAJOR" : "Computer Science" }';
+
+var jsonObj = JSON.parse(json);
+document.write("<br/><b>JSON Object</b><br/>");
+for(var objVarName in jsonObj) {
+    document.write(objVarName, " : ", jsonObj[objVarName], "<br/>");
+}
+
+var jsonStr = JSON.stringify(jsonObj);
+document.write("<br/><b>JSON String Format :</b> ", jsonStr, "<br/>");
+</script>
+</body>
+</html>

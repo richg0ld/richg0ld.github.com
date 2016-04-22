@@ -1,6 +1,6 @@
-function canvasSupport() {
+(function () {
     return Modernizr.canvas;
-}
+})();
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 canvas.width = 500;
@@ -10,45 +10,34 @@ var Obj = (function () {
         this.name = options.name || "통";
         this.x = Math.random() * 200;
         this.y = Math.random() * 200;
+        this.size = Math.random() * 15 + 10;
         this.textWidth = 0;
         this.textHeight = 0;
         this.speedX = options.speed || 2;
         this.speedY = options.speed || 2;
+        this.draw();
     }
     Obj.prototype.draw = function () {
         context.beginPath();
-        context.font = "30px Verdana";
         context.fillStyle = "white";
-        context.textBaseline = 'top';
-        context.fillText(this.name, this.x, this.y);
-        this.textWidth = context.measureText(this.name).width;
-        this.textHeight = 30;
+        context.fillRect(this.x, this.y, this.size, this.size);
         context.closePath();
+        // context.beginPath();
+        // context.font="30px Verdana";
+        // context.fillStyle = "white";
+        // context.textBaseline = 'top';
+        // context.fillText(this.name,this.x,this.y);
+        // context.closePath();
+        // this.textWidth = Math.round(context.measureText(this.name).width);
+        // this.textHeight = 30;
     };
     Obj.prototype.update = function () {
-        this.wallHit();
         this.x = this.x + this.speedX;
         this.y = this.y + this.speedY;
     };
-    Obj.prototype.hit = function () {
-    };
-    Obj.prototype.wallHit = function () {
-        if (this.x < 0) {
-            this.speedX = Math.abs(this.speedX);
-        }
-        else if (this.x > canvas.width - this.textWidth) {
-            this.speedX = -this.speedX;
-        }
-        if (this.y < 0) {
-            this.speedY = Math.abs(this.speedY);
-        }
-        else if (this.y > canvas.height - this.textHeight) {
-            this.speedY = -this.speedY;
-        }
-    };
     return Obj;
 }());
-var num = 10;
+var num = 15;
 var objs = [];
 for (var n = 0; n < num; n++) {
     objs.push(new Obj({ name: "obj" + n, speed: 3 }));
@@ -68,14 +57,89 @@ var Draw = function () {
     }
 };
 var Update = function () {
-    for (var j = 0; j < num; j++) {
-        objs[j].update();
+    for (var i = 0; i < num; i++) {
+        objs[i].update();
     }
 };
-canvasSupport();
+var wallHit = function () {
+    for (var i = 0; i < num; i++) {
+        if (objs[i].x < 0) {
+            objs[i].speedX = Math.abs(objs[i].speedX);
+        }
+        else if (objs[i].x > canvas.width - objs[i].size) {
+            objs[i].speedX = -Math.abs(objs[i].speedX);
+        }
+        if (objs[i].y < 0) {
+            objs[i].speedY = Math.abs(objs[i].speedY);
+        }
+        else if (objs[i].y > canvas.height - objs[i].size) {
+            objs[i].speedY = -Math.abs(objs[i].speedY);
+        }
+    }
+};
+var isCrash = function (self, target) {
+    var diffX = target.x - self.x;
+    var diffY = target.y - self.y;
+    return self.size > Math.sqrt(diffX * diffX + diffY * diffY);
+};
+var objCrash = function (self, target) {
+    var diffX = target.x - self.x;
+    var diffY = target.y - self.y;
+    console.log(Math.floor(Math.sqrt(diffX * diffX + diffY * diffY)));
+    self.speedX = -self.speedX;
+    self.speedY = -self.speedY;
+    target.speedX = -target.speedX;
+    target.speedY = -target.speedY;
+};
+var objHit = function () {
+    var self, target;
+    for (var i = 0; i < num; i++) {
+        self = objs[i];
+        for (var j = i + 1; j < num; j++) {
+            target = objs[j];
+            if (isCrash(self, target)) {
+                objCrash(self, target);
+            }
+        }
+    }
+};
+var objOverlap = function (self, target) {
+    self.x = self.x + target.x;
+    self.y = self.y + target.y;
+};
+var wallOverlap = function (self) {
+    if (self.x < 0) {
+        return self.x = 0;
+    }
+    else if (self.x > canvas.width - self.size) {
+        return self.x = canvas.width - self.size;
+    }
+    if (self.y < 0) {
+        return self.y = 0;
+    }
+    else if (self.y > canvas.width - self.size) {
+        return self.y = canvas.width - self.size;
+    }
+};
+var chkOverlap = function () {
+    var self, target;
+    for (var i = 0; i < num; i++) {
+        self = objs[i];
+        for (var j = i + 1; j < num; j++) {
+            target = objs[j];
+            if (isCrash(self, target)) {
+                objOverlap(self, target);
+                wallOverlap(self);
+                chkOverlap();
+            }
+        }
+    }
+};
+chkOverlap();
 Render(function () {
     Clear();
     Draw();
+    wallHit();
+    objHit();
     Update();
-    console.log(objs[0].x, objs[0].y);
 });

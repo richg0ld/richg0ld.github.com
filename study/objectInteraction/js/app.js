@@ -10,7 +10,7 @@ var Obj = (function () {
         this.name = options.name || "통";
         this.x = Math.random() * 200;
         this.y = Math.random() * 200;
-        this.size = Math.random() * 15 + 10;
+        this.size = Math.random() * 10 + 7;
         this.textWidth = 0;
         this.textHeight = 0;
         this.speedX = options.speed || 2;
@@ -37,7 +37,7 @@ var Obj = (function () {
     };
     return Obj;
 }());
-var num = 15;
+var num = 25;
 var objs = [];
 for (var n = 0; n < num; n++) {
     objs.push(new Obj({ name: "obj" + n, speed: 3 }));

@@ -83,8 +83,6 @@ var isCrash = function (self, target) {
     return self.size > Math.sqrt(diffX * diffX + diffY * diffY);
 };
 var objCrash = function (self, target) {
-    var diffX = target.x - self.x;
-    var diffY = target.y - self.y;
     self.speedX = -self.speedX;
     self.speedY = -self.speedY;
     target.speedX = -target.speedX;

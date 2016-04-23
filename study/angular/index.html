@@ -1,78 +1,10 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myApp">
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
-    <link rel="stylesheet" href="libs/bootstrap.min.css">
-    <link rel="stylesheet" href="libs/angular-chart.css">
-    <script src="libs/chart.js"></script>
-    <script src="libs/angular.min.js"></script>
-    <script src="libs/angular-chart.js"></script>
+    <title>Document</title>
 </head>
-<body class="well" ng-controller="mainCtrl">
-<ul class="list-unstyled clearfix">
-    <li class="pull-left " ng-repeat=" name in type" >
-        <button class="btn btn-default"
-                ng-class="{'btn-info':$index === clickIdx}"
-                ng-click="showChart($index)"
-        >{{name}}</button>
-    </li>
-</ul>
-<div ng-controller="chartCtrl">
-    <canvas ng-if="0 === clickIdx"
-            class="chart chart-line"
-            chart-data="data"
-            chart-legend="legend"
-            chart-labels="labels"
-            chart-series="series"
-    ></canvas>
-    <canvas ng-if="1 === clickIdx"
-            class="chart chart-bar"
-            chart-data="data"
-            chart-legend="legend"
-            chart-labels="labels"
-            chart-series="series"
-    ></canvas>
-    <canvas ng-if="2 === clickIdx"
-            class="chart chart-doughnut"
-            chart-data="data[0]"
-            chart-legend="legend"
-            chart-labels="labels"
-            chart-series="series"
-    ></canvas>
-    <canvas ng-if="3 === clickIdx"
-            class="chart chart-radar"
-            chart-data="data"
-            chart-legend="legend"
-            chart-labels="labels"
-            chart-series="series"
-    ></canvas>
-    <canvas ng-if="4 === clickIdx"
-            class="chart chart-polar-area"
-            chart-data="data[0]"
-            chart-legend="legend"
-            chart-labels="labels"
-            chart-series="series"
-    ></canvas>
-</div>
-<script>
-    var myApp = angular.module("myApp",['chart.js']).
-    controller("mainCtrl", function($scope){
-        $scope.type = ['라인', '바', '도넛', '레이더', '폴라'];
-        $scope.clickIdx = 0;
-        $scope.showChart = function(idx){ //차트 클릭 시
-            $scope.clickIdx = idx;
-        }
-    }).
-    controller('chartCtrl',function($scope){
-        $scope.data = [
-            [123,234,345,111,11,97,43],
-            [112,444,123,166,421,522,11]
-        ];
-        $scope.legend = true;
-        $scope.series = ['A', 'B'];
-        $scope.labels = ['월','화','수','목','금','토','일'];
-    });
-</script>
+<body>
+
 </body>
 </html>

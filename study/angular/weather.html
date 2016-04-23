@@ -28,14 +28,13 @@
             $scope.cityDate =[];
             $scope.legend = true;
             $scope.series = ['일주일 날씨'];
-            $scope.weatherResult = $scope.weatherAPI.get({q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId},function(){
-                for (var i=0; i < $scope.cnt; i++){
-                    $scope.cityTemp[0][i] = Math.round($scope.weatherResult.list[i].temp.day - 273.15);
-                    $scope.cityDate[i] = new Date($scope.weatherResult.list[i].dt * 1000).getDate();
-                }
-            });
+            loadChartData();
             $scope.showChart = function(city){ //버튼 클릭 시
                 $scope.city = city;
+                loadChartData();
+            };
+
+            function loadChartData() {
                 $scope.weatherResult = $scope.weatherAPI.get({q:$scope.city, cnt: $scope.cnt, APPID: $scope.appId},function(){
                     if(!$scope.weatherResult.cnt) return; // 호출 속도가 느릴 때
                     for (var j=0; j < $scope.cnt; j++){
@@ -43,7 +42,7 @@
                         $scope.cityDate[j] = new Date($scope.weatherResult.list[j].dt * 1000).getDate();
                     }
                 });
-            };
+            }
         });
     </script>
 </head>

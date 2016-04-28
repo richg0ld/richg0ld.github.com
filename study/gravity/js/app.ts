@@ -12,6 +12,8 @@ canvas.height = 800;
 context.fillStyle = "white";
 context.fillRect(0, 0, canvas.width, canvas.height);
 
+canvas.style.width = "100%";
+
 class Ball {
     name: string;
     radius: number;
@@ -104,5 +106,8 @@ class Display extends Gravity {
 let obj = new Ball({});
 let d = new Display(obj);
 
-canvas.addEventListener("mousedown touchstart", ()=> d.gravity = -0.18 );
-canvas.addEventListener("mouseup touchend", ()=> d.gravity = 0.18 );
+canvas.addEventListener("mousedown", ()=> d.gravity = -0.18 );
+canvas.addEventListener("mouseup", ()=> d.gravity = 0.18 );
+
+canvas.addEventListener("touchstart", ()=> d.gravity = -0.18 );
+canvas.addEventListener("touchend", ()=> d.gravity = 0.18 );

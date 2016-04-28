@@ -13,6 +13,7 @@ canvas.width = 500;
 canvas.height = 800;
 context.fillStyle = "white";
 context.fillRect(0, 0, canvas.width, canvas.height);
+canvas.style.width = "100%";
 var Ball = (function () {
     function Ball(options) {
         this.name = options.name || "obj";
@@ -92,6 +93,8 @@ var Display = (function (_super) {
 }(Gravity));
 var obj = new Ball({});
 var d = new Display(obj);
-canvas.addEventListener("mousedown touchstart", function () { return d.gravity = -0.18; });
-canvas.addEventListener("mouseup touchend", function () { return d.gravity = 0.18; });
+canvas.addEventListener("mousedown", function () { return d.gravity = -0.18; });
+canvas.addEventListener("mouseup", function () { return d.gravity = 0.18; });
+canvas.addEventListener("touchstart", function () { return d.gravity = -0.18; });
+canvas.addEventListener("touchend", function () { return d.gravity = 0.18; });
 //# sourceMappingURL=app.js.map

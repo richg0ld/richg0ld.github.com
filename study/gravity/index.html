@@ -4,10 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
     <title>중력</title>
+    <style>
+        #wind{width:100px;}
+    </style>
     <script src="js/modernizr-1.6.min.js"></script>
 </head>
 <body>
 <canvas id="canvas"></canvas>
+<div>
+    <label for="wind">바람세기</label>
+    <input id="wind" type="range" value="0" min="-10" max="10">
+    <output id="wind_val">0</output>
+    <button id="wind_btn">적용</button>
+</div>
+<div>
+    <label for="gravity">중력</label>
+    <input id="gravity" type="range" value="9" max="50">
+    <output id="gravity_val">0.9</output>
+    <button id="gravity_btn">적용</button>
+</div>
+
 <script src="js/app.js"></script>
 </body>
 </html>

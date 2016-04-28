@@ -104,5 +104,5 @@ class Display extends Gravity {
 let obj = new Ball({});
 let d = new Display(obj);
 
-canvas.addEventListener("mousedown", ()=> d.gravity = -0.18 );
-canvas.addEventListener("mouseup", ()=> d.gravity = 0.18 );
+canvas.addEventListener("mousedown touchstart", ()=> d.gravity = -0.18 );
+canvas.addEventListener("mouseup touchend", ()=> d.gravity = 0.18 );

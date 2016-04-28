@@ -92,6 +92,6 @@ var Display = (function (_super) {
 }(Gravity));
 var obj = new Ball({});
 var d = new Display(obj);
-canvas.addEventListener("mousedown", function () { return d.gravity = -0.18; });
-canvas.addEventListener("mouseup", function () { return d.gravity = 0.18; });
+canvas.addEventListener("mousedown touchstart", function () { return d.gravity = -0.18; });
+canvas.addEventListener("mouseup touchend", function () { return d.gravity = 0.18; });
 //# sourceMappingURL=app.js.map

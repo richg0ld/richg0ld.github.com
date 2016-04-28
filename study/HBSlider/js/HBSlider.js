@@ -361,3 +361,4 @@ var SlideImages = (function () {
     };
     return SlideImages;
 }());
+//# sourceMappingURL=HBSlider.js.map

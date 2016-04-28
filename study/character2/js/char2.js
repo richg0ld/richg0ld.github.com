@@ -288,3 +288,4 @@ Renderer(function () {
     user.render(); //닝겐 렌더링
     obj.render(); //사물 렌더링
 });
+//# sourceMappingURL=char2.js.map

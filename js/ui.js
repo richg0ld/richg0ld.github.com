@@ -147,7 +147,7 @@ var Mobile;
             });
         };
         return MenuController;
-    })();
+    }());
     Mobile.MenuController = MenuController;
     var HeadController = (function () {
         function HeadController(options) {
@@ -218,6 +218,7 @@ var Mobile;
             });
         };
         return HeadController;
-    })();
+    }());
     Mobile.HeadController = HeadController;
 })(Mobile || (Mobile = {}));
+//# sourceMappingURL=ui.js.map

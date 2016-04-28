@@ -322,3 +322,4 @@ var keypad = new Keypad(man);
 // 	let spAnimation = new SpriteAnimation();
 // 	setInterval(()=>spAnimation.bgPosChange(), 100);
 // })() 
+//# sourceMappingURL=char.js.map

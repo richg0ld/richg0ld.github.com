@@ -44,7 +44,7 @@ class Ball {
 class Gravity {
     gravity: number;
     constructor(){
-        this.gravity = 0.09; //중력
+        this.gravity = 0.9; //중력
     }
     accelerate(){
         this.gravity = -0.05;
@@ -94,20 +94,18 @@ class Display extends Gravity {
     }
     clear(){
         context.clearRect(0, 0, canvas.width, canvas.height);
-    };
+    }
     render(func){
         window.requestAnimationFrame(()=> this.render(func));
         func();
     }
 }
 
-
-
 let obj = new Ball({});
 let d = new Display(obj);
 
-canvas.addEventListener("mousedown", ()=> d.gravity = -0.18 );
-canvas.addEventListener("mouseup", ()=> d.gravity = 0.18 );
+canvas.addEventListener("mousedown", ()=> d.gravity = -0.9 );
+canvas.addEventListener("mouseup", ()=> d.gravity = 0.9 );
 
-canvas.addEventListener("touchstart", ()=> d.gravity = -0.18 );
-canvas.addEventListener("touchend", ()=> d.gravity = 0.18 );
+canvas.addEventListener("touchstart", ()=> d.gravity = -0.9 );
+canvas.addEventListener("touchend", ()=> d.gravity = 0.9 );

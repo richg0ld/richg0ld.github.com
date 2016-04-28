@@ -32,7 +32,7 @@ var Ball = (function () {
 }());
 var Gravity = (function () {
     function Gravity() {
-        this.gravity = 0.09; //중력
+        this.gravity = 0.9; //중력
     }
     Gravity.prototype.accelerate = function () {
         this.gravity = -0.05;
@@ -83,7 +83,6 @@ var Display = (function (_super) {
     Display.prototype.clear = function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     };
-    ;
     Display.prototype.render = function (func) {
         var _this = this;
         window.requestAnimationFrame(function () { return _this.render(func); });
@@ -93,8 +92,8 @@ var Display = (function (_super) {
 }(Gravity));
 var obj = new Ball({});
 var d = new Display(obj);
-canvas.addEventListener("mousedown", function () { return d.gravity = -0.18; });
-canvas.addEventListener("mouseup", function () { return d.gravity = 0.18; });
-canvas.addEventListener("touchstart", function () { return d.gravity = -0.18; });
-canvas.addEventListener("touchend", function () { return d.gravity = 0.18; });
+canvas.addEventListener("mousedown", function () { return d.gravity = -0.9; });
+canvas.addEventListener("mouseup", function () { return d.gravity = 0.9; });
+canvas.addEventListener("touchstart", function () { return d.gravity = -0.9; });
+canvas.addEventListener("touchend", function () { return d.gravity = 0.9; });
 //# sourceMappingURL=app.js.map

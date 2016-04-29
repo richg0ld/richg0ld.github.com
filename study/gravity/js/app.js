@@ -16,10 +16,12 @@ context.fillRect(0, 0, canvas.width, canvas.height);
 canvas.style.width = "100%";
 var Ball = (function () {
     function Ball(options) {
+        var randomX = Math.random();
+        var randomY = Math.random();
         this.name = options.name || "obj";
         this.radius = options.radius || 30;
-        this.x = canvas.width / 2;
-        this.y = canvas.height / 2;
+        this.x = canvas.width * Math.random();
+        this.y = -canvas.width * Math.random() * 20;
         this.weight = options.weight || 10;
         this.color = options.weight || "red";
         this.rotate = 0;
@@ -46,52 +48,57 @@ var Display = (function (_super) {
     function Display(object) {
         var _this = this;
         _super.call(this);
-        this.obj = object;
+        this.objs = object;
+        for (var n = 0; n < this.objs.length; n++) {
+            this.draw(this.objs[n]);
+        }
         this.render(function () {
             _this.clear();
-            _this.draw();
-            _this.update();
+            for (var n = 0; n < _this.objs.length; n++) {
+                _this.draw(_this.objs[n]);
+                _this.update(_this.objs[n]);
+            }
         });
     }
-    Display.prototype.draw = function () {
-        var gradient = context.createLinearGradient(0, 0, this.obj.radius * 2, this.obj.radius * 2);
+    Display.prototype.draw = function (obj) {
+        var gradient = context.createLinearGradient(0, 0, obj.radius * 2, obj.radius * 2);
         gradient.addColorStop(0, "magenta");
         gradient.addColorStop(0.5, "blue");
         gradient.addColorStop(1.0, "red");
         context.save();
-        context.translate(this.obj.x, this.obj.y); //기준점 변경
-        context.rotate(this.obj.rotate);
+        context.translate(obj.x, obj.y); //기준점 변경
+        context.rotate(obj.rotate);
         context.beginPath();
-        context.arc(0, 0, this.obj.radius, 0, 2 * Math.PI);
+        context.arc(0, 0, obj.radius, 0, 2 * Math.PI);
         context.fillStyle = gradient;
         context.fill();
         context.stroke();
         context.closePath();
         context.restore();
     };
-    Display.prototype.update = function () {
-        this.obj.gravitySpeed += this.gravity;
-        this.obj.windSpeed += this.wind;
-        this.obj.x += this.obj.speedX + this.obj.windSpeed;
-        this.obj.y += this.obj.speedY + this.obj.gravitySpeed;
-        this.sideHit();
-        this.bottomHit();
-        this.obj.rotate += (Math.PI / 180) * this.obj.windSpeed;
+    Display.prototype.update = function (obj) {
+        obj.gravitySpeed += this.gravity;
+        obj.windSpeed += this.wind;
+        obj.x += obj.speedX + obj.windSpeed;
+        obj.y += obj.speedY + obj.gravitySpeed;
+        this.sideHit(obj);
+        this.bottomHit(obj);
+        obj.rotate += (Math.PI / 180) * obj.windSpeed;
     };
-    Display.prototype.bottomHit = function () {
-        if (this.obj.y >= canvas.height - this.obj.radius) {
-            this.obj.y = canvas.height - this.obj.radius;
-            this.obj.gravitySpeed = -(this.obj.gravitySpeed * this.obj.bounce); //바닥에 도착했을 때 현재 중력 가속도를 반대 방향으로 탄성만큼 곺한 값으로 바꿔주고 다시 렌더링에서 값을 양의 숫자쪽으로 증가시킨다.
+    Display.prototype.bottomHit = function (obj) {
+        if (obj.y >= canvas.height - obj.radius) {
+            obj.y = canvas.height - obj.radius;
+            obj.gravitySpeed = -(obj.gravitySpeed * obj.bounce); //바닥에 도착했을 때 현재 중력 가속도를 반대 방향으로 탄성만큼 곺한 값으로 바꿔주고 다시 렌더링에서 값을 양의 숫자쪽으로 증가시킨다.
         }
     };
-    Display.prototype.sideHit = function () {
-        if (this.obj.x >= canvas.width - this.obj.radius) {
-            this.obj.x = canvas.width - this.obj.radius;
-            this.obj.windSpeed = -(this.obj.windSpeed * this.obj.bounce);
+    Display.prototype.sideHit = function (obj) {
+        if (obj.x >= canvas.width - obj.radius) {
+            obj.x = canvas.width - obj.radius;
+            obj.windSpeed = -(obj.windSpeed * obj.bounce);
         }
-        else if (this.obj.x <= this.obj.radius) {
-            this.obj.x = this.obj.radius;
-            this.obj.windSpeed = -(this.obj.windSpeed * this.obj.bounce);
+        else if (obj.x <= obj.radius) {
+            obj.x = obj.radius;
+            obj.windSpeed = -(obj.windSpeed * obj.bounce);
         }
     };
     Display.prototype.clear = function () {
@@ -104,8 +111,14 @@ var Display = (function (_super) {
     };
     return Display;
 }(Gravity));
-var obj = new Ball({});
-var d = new Display(obj);
+var num = 30;
+var objs = [];
+for (var n = 0; n < num; n++) {
+    objs.push(new Ball({
+        radius: 60 * Math.random() + 10
+    }));
+}
+var d = new Display(objs);
 var Controller = (function () {
     var w = document.getElementById("wind");
     var wVal = document.getElementById("wind_val");
@@ -121,7 +134,7 @@ var Controller = (function () {
     var g = document.getElementById("gravity");
     var gVal = document.getElementById("gravity_val");
     var gBtn = document.getElementById("gravity_btn");
-    var gn = 0;
+    var gn = 0.9;
     g.addEventListener("input", function () {
         gn = parseFloat((g.value * 0.1).toFixed(1));
         gVal.innerHTML = gn;

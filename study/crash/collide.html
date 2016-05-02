@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #canvas{
+            border:1px solid black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script type="text/javascript">
+    var cvs = document.getElementById("canvas");
+    cvs.width=300;
+    cvs.height=300;
+    var ctx = cvs.getContext("2d");
+
+
+    var Ball = (function () {
+        function Ball(options){
+            this.name = options.name;
+            this.radius = options.radius;
+            this.x = cvs.width/2 - options.radius * Math.sin( -options.degree * Math.PI/180 );
+            this.y = cvs.height/2 - options.radius * Math.cos( -options.degree * Math.PI/180 );
+            this.vx = 0;
+            this.vy = 0;
+            this.strokeBorder = options.strokeBorder || 1;
+            this.strokeColor = options.strokeColor || "red";
+            this.draw();
+        }
+        Ball.prototype.draw = function(){
+            ctx.save();
+            ctx.translate(this.x, this.y);//기준점 변경
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
+            ctx.fillStyle = "#c9c9c9";
+            ctx.fill();
+            ctx.strokeStyle= "gray";
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+        };
+        Ball.prototype.vector = function(direction, volume){
+            var diffX = direction.x - this.x;
+            var diffY = direction.y - this.y;
+            var distance = Math.sqrt(diffX * diffX + diffY * diffY);
+            var perX = diffX/distance; //거리 1당 x 방향 값
+            var perY = diffY/distance; //거리 1당 y 방향 값
+            this.vx = perX*volume; //백터값, 방향에 크기를 곱하여 백터값 만듬
+            this.vy = perY*volume; //백터값
+            ctx.beginPath();
+            ctx.globalAlpha = 0.5;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.x+this.vx, this.y+this.vy);
+            ctx.lineWidth=this.strokeBorder;
+            ctx.strokeStyle= this.strokeColor;
+            ctx.stroke();
+            ctx.closePath();
+        };
+        return Ball;
+    })();
+
+    var bounceVector = function (self, target){
+
+        var bounceX = target.vx + self.vx; //타겟에 부딛혀 반사될 백터 x 값
+        var bounceY = target.vy + self.vy; //타겟에 부딛혀 반사될 백터 y 값
+        ctx.beginPath();
+        ctx.globalAlpha = 0.5;
+        ctx.moveTo(self.x, self.y);
+        ctx.lineTo(self.x+bounceX, self.y+bounceY);
+        ctx.moveTo(target.x, target.y);
+        ctx.lineTo(target.x-bounceX, target.y-bounceY);
+        ctx.lineWidth=this.strokeBorder;
+        ctx.strokeStyle= "green";
+        ctx.stroke();
+        ctx.closePath();
+    };
+
+    var b1 = new Ball({
+        name: "b1",
+        radius: 30,
+        degree: 225,
+        strokeBorder: 2,
+        strokeColor: "red"
+    });
+
+    var b2 = new Ball({
+        name: "b2",
+        radius: 40,
+        degree: 45,
+        strokeBorder: 4,
+        strokeColor: "blue"
+    });
+
+    ctx.beginPath();
+    ctx.fillStyle = "red";
+    ctx.arc(cvs.width/2, cvs.height/2, 3, 0, 2*Math.PI);
+    ctx.fill();
+    ctx.closePath();
+
+    b1.vector({x:100,y:100},60);
+    b2.vector(b1,30);
+    bounceVector(b1, b2);
+</script>
+</body>
+</html>

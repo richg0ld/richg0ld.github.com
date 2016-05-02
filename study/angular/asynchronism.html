@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+</head>
+<body>
+<script>
+//    var xhr = new XMLHttpRequest();
+//    xhr.onreadystatechange = function(){
+//        if(xhr.status === 200 && xhr.readyState === 4){
+//            console.log(JSON.parse(xhr.responseText));
+//        }
+//    };
+//    xhr.open('get', 'package.json', true);
+//    xhr.send();
+//
+    function order(){
+        return new Promise(function(resolve, reject){
+            resolve('콤비네이션 피자');
+            reject('오토바이 사고가 났음.. ㄷ ㄷ');
+        });
+    }
+
+    order('pizza').then(function(){
+       console.log(pizza + "를(을) 먹는다");
+        return pizza; //리턴을 받게 되면 then으로 한번더 붙일 수 있다
+    }, function(err){
+        console.log(err);
+    }).then(function(pizza){
+        console.log(pizza + "소화다됨");
+    });
+
+//var p = $.ajax('package.json');
+//console.log(p);
+//p.success(function(res){
+//    console.log(res);
+//}).error(function(err){
+//    console.log(err);
+//});
+
+function order(path){
+    return $.ajax(path);
+}
+order('package.json').success(function(res){
+    console.log(res);
+}).error(function(err){
+    console.log(err);
+});
+</script>
+</body>
+</html>

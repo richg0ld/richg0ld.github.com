@@ -7,8 +7,8 @@ declare let Modernizr;
 const canvas = <HTMLCanvasElement> document.getElementById("canvas");
 const context = canvas.getContext("2d");
 canvas.style.border = "1px solid black";
-canvas.width = 500;
-canvas.height = 800;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 context.fillStyle = "white";
 context.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -33,14 +33,14 @@ class Ball {
         this.radius = options.radius || 30;
         this.x = canvas.width * Math.random();
         this.y = -canvas.width * Math.random()*20;
-        this.weight = options.weight || 10;
+        this.weight = this.radius *0.5;
         this.color = options.weight || "red";
         this.rotate = 0;
         this.vectorX = 0;
         this.vectorY = 0;
         this.speedX = 0;
         this.speedY = 0;
-        this.elasticity = 0.6; //탄성
+        this.elasticity = 0.6 + (1/this.weight); //탄성
     }
 }
 
@@ -163,7 +163,7 @@ class Display extends Gravity {
         func();
     }
 }
-let num = 20;
+let num = 25;
 let objs = [];
 for(let n=0; n<num; n++){ //오브젝트들을 생성하여 objs 배열에 push 함
     objs.push(new Ball({

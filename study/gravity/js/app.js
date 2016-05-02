@@ -9,8 +9,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 canvas.style.border = "1px solid black";
-canvas.width = 500;
-canvas.height = 800;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 context.fillStyle = "white";
 context.fillRect(0, 0, canvas.width, canvas.height);
 canvas.style.width = "100%";
@@ -20,14 +20,14 @@ var Ball = (function () {
         this.radius = options.radius || 30;
         this.x = canvas.width * Math.random();
         this.y = -canvas.width * Math.random() * 20;
-        this.weight = options.weight || 10;
+        this.weight = this.radius * 0.5;
         this.color = options.weight || "red";
         this.rotate = 0;
         this.vectorX = 0;
         this.vectorY = 0;
         this.speedX = 0;
         this.speedY = 0;
-        this.elasticity = 0.6; //탄성
+        this.elasticity = 0.6 + (1 / this.weight); //탄성
     }
     return Ball;
 }());
@@ -145,7 +145,7 @@ var Display = (function (_super) {
     };
     return Display;
 }(Gravity));
-var num = 20;
+var num = 25;
 var objs = [];
 for (var n = 0; n < num; n++) {
     objs.push(new Ball({

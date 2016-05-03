@@ -107,37 +107,23 @@ var Display = (function (_super) {
             return currentDistance <= attachedDistance;
         };
         var objCrash = function (self, target) {
-            var collidX = target.vectorX + self.vectorX; //타겟에 부딛혀 반사될 백터 x 값
-            var collidY = target.vectorY + self.vectorY; //타겟에 부딛혀 반사될 백터 y 값
-            var selfCollidX = self.x + collidX; //자신이 충돌 후 움직일 반사된 백터 x 값;
-            var selfCollidY = self.y + collidY; //자신이 충돌 후 움직일 반사된 백터 x 값;
-            var targetCollidX = target.x - collidX; //타겟이 충돌 후 움직일 반사된 백터 x 값;
-            var targetCollidY = target.y - collidY; //타겟이 충돌 후 움직일 반사된 백터 x 값;
-            self.vectorX = self.vectorX + selfCollidX * .selasticity;
-            self.vectorY = self.vectorY + selfCollidY * target.elasticity;
-            target.vectorX = target.vectorX + targetCollidX * target.elasticity;
-            target.vectorY = target.vectorY + targetCollidY * target.elasticity;
-            console.log(selfCollidX);
-            // let collidVx = target.x - self.x;
-            // let collidVy = target.y - self.y;
-            // let distance = Math.sqrt( collidVx * collidVx + collidVy * collidVy );
-            // let unitCollideVx = collidVx / distance;
-            // let unitCollideVy = collidVy / distance;
-            //
-            // let beforeBall1Vp = unitCollideVx *  self.vectorX + unitCollideVy * self.vectorY;
-            // let beforeBall1Vn = -unitCollideVy *  self.vectorX + unitCollideVx * self.vectorY;
-            // let beforeBall2Vp = unitCollideVx *  target.vectorX + unitCollideVy * target.vectorY;
-            // let beforeBall2Vn = -unitCollideVy *  target.vectorX + unitCollideVx * target.vectorY;
-            //
-            // if( beforeBall1Vp - beforeBall2Vp <= 0 ) return;
-            //
-            // let afterBall1Vp = beforeBall1Vp + self.elasticity * ( beforeBall2Vp - beforeBall1Vp ) * target.radius / ( self.radius + target.radius ) ;
-            // let afterBall2Vp = beforeBall2Vp + self.elasticity * ( beforeBall1Vp - beforeBall2Vp ) * self.radius / ( self.radius + target.radius ) * self.elasticity;
-            //
-            // self.vectorX = afterBall1Vp*unitCollideVx - beforeBall1Vn*unitCollideVy;
-            // self.vectorY = afterBall1Vp*unitCollideVy + beforeBall1Vn*unitCollideVx;
-            // target.vectorX = afterBall2Vp*unitCollideVx - beforeBall2Vn*unitCollideVy;
-            // target.vectorY = afterBall2Vp*unitCollideVy + beforeBall2Vn*unitCollideVx;
+            var collidVx = target.x - self.x;
+            var collidVy = target.y - self.y;
+            var distance = Math.sqrt(collidVx * collidVx + collidVy * collidVy);
+            var unitCollideVx = collidVx / distance;
+            var unitCollideVy = collidVy / distance;
+            var beforeBall1Vp = unitCollideVx * self.vectorX + unitCollideVy * self.vectorY;
+            var beforeBall1Vn = -unitCollideVy * self.vectorX + unitCollideVx * self.vectorY;
+            var beforeBall2Vp = unitCollideVx * target.vectorX + unitCollideVy * target.vectorY;
+            var beforeBall2Vn = -unitCollideVy * target.vectorX + unitCollideVx * target.vectorY;
+            if (beforeBall1Vp - beforeBall2Vp <= 0)
+                return;
+            var afterBall1Vp = beforeBall1Vp + self.elasticity * (beforeBall2Vp - beforeBall1Vp) * target.radius / (self.radius + target.radius);
+            var afterBall2Vp = beforeBall2Vp + self.elasticity * (beforeBall1Vp - beforeBall2Vp) * self.radius / (self.radius + target.radius) * self.elasticity;
+            self.vectorX = afterBall1Vp * unitCollideVx - beforeBall1Vn * unitCollideVy;
+            self.vectorY = afterBall1Vp * unitCollideVy + beforeBall1Vn * unitCollideVx;
+            target.vectorX = afterBall2Vp * unitCollideVx - beforeBall2Vn * unitCollideVy;
+            target.vectorY = afterBall2Vp * unitCollideVy + beforeBall2Vn * unitCollideVx;
         };
         for (var i = 0; i < num; i++) {
             self = objs[i];

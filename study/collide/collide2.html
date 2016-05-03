@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #canvas{
+            border:1px solid black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script type="text/javascript">
+    var cvs = document.getElementById("canvas");
+    cvs.width=300;
+    cvs.height=300;
+    var ctx = cvs.getContext("2d");
+
+    var Ball = (function(){
+        function Ball(options){
+            this.name = options.name || "obj";
+            this.radius = options.radius;
+            this.x = options.x;
+            this.y = options.y;
+            this.mass = this.radius *0.5;
+            this.color = options.weight || "red";
+            this.angle = options.angle || 45;
+            this.radians = this.angle * Math.PI/180;
+            this.speed= 2;
+            this.vx = Math.cos(this.radians) * this.speed;
+            this.vy = Math.sin(this.radians) * this.speed;
+            this.elasticity = 0.6 + (1/this.mass); //탄성
+            this.draw();
+        }
+        Ball.prototype.draw = function(){
+            ctx.save();
+            ctx.translate(this.x, this.y);//기준점 변경
+            ctx.rotate(this.rotate);
+            ctx.beginPath();
+            ctx.arc(0, 0, this.radius, 0, 2*Math.PI);
+            ctx.fillStyle = "#c9c9c9";
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+        };
+        return Ball;
+    })();
+
+    var GRAVITY = .9;
+    var FRICTION = .01;
+    var num = 10;
+    var objs = [];
+
+    function createObjs(){
+        var options;
+        for(var n=0; n<num; n++){ //오브젝트들을 생성하여 objs 배열에 push 함
+            var placeOK = false;
+            options = {
+                name:"b"+n,
+                x: canvas.width * Math.random(),
+                y: canvas.height * Math.random(),
+                radius: 10*Math.random()+10,
+                angle: Math.floor(Math.random()*360)
+            };
+            objs.push(new Ball(options));
+            while (!placeOK) {
+                objs[n].x = canvas.width * Math.random();
+                objs[n].y = canvas.height * Math.random();
+                placeOK = isOverlap(objs[n]);
+            }
+        }
+    }
+    function isOverlap(obj){
+        var retval = true;
+        for (var i =0; i<objs.length-1;i++) {
+            if (isCollide(obj, objs[i])) {
+                retval = false;
+            }
+        }
+        return retval;
+    }
+
+    function clear(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    function update(){
+        var obj;
+        for(var n=0;n<objs.length;n++){
+            obj = objs[n];
+            obj.vx = obj.vx - ( obj.vx * FRICTION );
+            obj.vy = obj.vy - ( obj.vy * FRICTION ) + GRAVITY;
+            obj.x += obj.vx;
+            obj.y += obj.vy;
+        }
+    }
+    function wallHit(){
+        var obj;
+        for(var n=0;n<objs.length;n++){
+            obj = objs[n];
+            if (obj.x + obj.radius > cvs.width) {
+                obj.vx = obj.vx*-1;
+                obj.x = cvs.width - obj.radius;
+
+            } else if (obj.x - obj.radius < 0 ) {
+                obj.vx = obj.vx * -1;
+                obj.x = obj.radius;
+
+            } else if (obj.y + obj.radius > cvs.height ) {
+                obj.vy = obj.vy*-1;
+                obj.y = cvs.height - obj.radius;
+
+            } else if(obj.y - obj.radius < 0) {
+                obj.vy = obj.vy*-1;
+                obj.y = obj.radius;
+            }
+        }
+
+//        if (obj.x > cvs.width || obj.x < 0 ) { //x으로 반사는 180도에서 자기 각도 만큼 뺀 위치로 이동
+//            obj.angle = 180 - obj.angle;
+//        } else if (obj.y > cvs.height || obj.y < 0) { //y으로 반사는 360도에서 자기 각도 만큼 뺀 위치로 이동
+//            obj.angle = 360 - obj.angle;
+//        }
+    }
+    function collide() {
+        var obj;
+        var targetObj;
+        for (var i =0; i <objs.length; i++) {
+            obj = objs[i];
+            for (var j = i+1; j < objs.length; j++) {
+                targetObj = objs[j];
+                if (isCollide(obj, targetObj)) {
+                    collideBalls(obj, targetObj);
+                }
+            }
+        }
+    }
+    function isCollide(self, target){//충돌여부
+        let diffX = target.x - self.x;
+        let diffY = target.y - self.y;
+        let attachedDistance = target.radius + self.radius;
+        let currentDistance = Math.sqrt(diffX * diffX + diffY * diffY);
+        return currentDistance <= attachedDistance;
+    }
+    function collideBalls(self, target){
+        var dx = self.x - target.x;
+        var dy = self.y - target.y;
+
+        //공의 충돌 각도 계산(Math.atan2)
+        //충돌선의 각도, 충돌각도
+        var collisionAngle = Math.atan2(dy, dx);
+
+        //공이 부딪치기 전의 x,y 속도값을 이용 공들의 속도 (벡터 크기) 계산
+        var speed1 = Math.sqrt(self.vx * self.vx + self.vy * self.vy);
+        var speed2 = Math.sqrt(target.vx * target.vx + target.vy * target.vy);
+
+        //현재공의 속도값을 이용해서 공들의 라디안 각도 계산(벡터 방향)
+        var direction1 = Math.atan2(self.vy, self.vx);
+        var direction2 = Math.atan2(target.vy, target.vx);
+
+        //운동량 보전 법칙 적용
+        //삼각함수를 적용하여 벡트럴 반시계 방향으로 회전
+        //두 공의 충돌각도를 이용해서 x,y 속도 계산
+        var vx_1 = speed1 * Math.cos(direction1 - collisionAngle);
+        var vy_1 = speed1 * Math.sin(direction1 - collisionAngle);
+        var vx_2 = speed2 * Math.cos(direction2 - collisionAngle);
+        var vy_2 = speed2 * Math.sin(direction2 - collisionAngle);
+
+        //mass(질량)값을 운동량 보존 법칙에 적용 최종값을 구한다.
+        var final_vx_1 = ((self.mass - target.mass) * vx_1 + (target.mass + target.mass) * vx_2)/(self.mass + target.mass);
+        var final_vx_2 = ((self.mass + self.mass) * vx_1 + (target.mass - self.mass) * vx_2)/(self.mass + target.mass);
+
+        var final_vy_1 = vy_1;
+        var final_vy_2 = vy_2;
+
+        self.vx = Math.cos(collisionAngle) * final_vx_1 + Math.cos(collisionAngle + Math.PI/2) * final_vy_1;
+        self.vy = Math.sin(collisionAngle) * final_vx_1 + Math.sin(collisionAngle + Math.PI/2) * final_vy_1;
+        target.vx = Math.cos(collisionAngle) * final_vx_2 + Math.cos(collisionAngle + Math.PI/2) * final_vy_2;
+        target.vy = Math.sin(collisionAngle) * final_vx_2 + Math.sin(collisionAngle + Math.PI/2) * final_vy_2;
+
+        self.x = (self.x += self.vx);
+        self.y = (self.y += self.vy);
+        target.x = (target.x += target.vx);
+        target.y = (target.y += target.vy);
+    }
+    function draw(){
+        var obj;
+        for(var n=0;n<this.objs.length;n++){
+            obj = objs[n];
+            ctx.save();
+            ctx.translate(obj.x, obj.y);//기준점 변경
+            ctx.rotate(obj.rotate);
+            ctx.beginPath();
+            ctx.arc(0, 0, obj.radius, 0, 2*Math.PI);
+            ctx.fillStyle = "#c9c9c9";
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+            ctx.restore();
+        }
+    }
+    function Render(func){
+        window.requestAnimationFrame(function(){
+            Render(func);
+        });
+        func();
+    }
+
+    createObjs();
+    Render(function(){
+        clear();
+        update();
+        wallHit();
+        collide();
+        draw();
+    });
+
+</script>
+</body>
+</html>

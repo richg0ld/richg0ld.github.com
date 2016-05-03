@@ -17,7 +17,6 @@
     cvs.height=300;
     var ctx = cvs.getContext("2d");
 
-
     var Ball = (function () {
         function Ball(options){
             this.name = options.name;
@@ -61,23 +60,20 @@
 
     var bounceVector = function (self, target){
 
-        var dX = target.vx - self.vx; // 다음으로 이동할 공의 중심 사이 거리 계산
-        var dY = target.vy - self.vy; // 다음으로 이동할 공의 중심 사이 거리 계산
+        var dx = self.vx - target.vx; //충돌이 없으면 그려질 공의 다음 위치 x좌표
+        var dy = self.vy - target.vy; //충돌이 없으면 그려질 공의 다음 위치 y좌표
 
-        var CollidAngle = Math.atan2(dY,dX);
+        var colliisionAngle = Math.atan2(dy, dx); // 두 물체의 충돌 각도 계산
 
-        var selfCollidX = self.x + dX; //자신이 충돌 후 움직일 반사된 백터 x 값
-        var selfCollidY = self.y + dY; //자신이 충돌 후 움직일 반사된 백터 x 값
-
-        var targetCollidX = target.x - dX; //타겟이 충돌 후 움직일 반사된 백터 x 값
-        var targetCollidY = target.y - dY; //타겟이 충돌 후 움직일 반사된 백터 x 값
+        var speed1 = Math.sqrt(self.vx * self.vx + self.velocityy * ball1.velocityy);
+        var speed2 = Math.sqrt(target.vx * target.vx + target.velocityy * target.velocityy);
 
         ctx.beginPath();
         ctx.globalAlpha = 0.5;
         ctx.moveTo(self.x, self.y);
-        ctx.lineTo(selfCollidX, selfCollidY);
+        ctx.lineTo(self.x*dir1, self.y*dir1);
         ctx.moveTo(target.x, target.y);
-        ctx.lineTo(targetCollidX, targetCollidY);
+        ctx.lineTo(target.x*dir2, target.y*dir2);
         ctx.lineWidth=this.strokeBorder;
         ctx.strokeStyle= "green";
         ctx.stroke();
@@ -110,6 +106,7 @@
     b1.vector({x:128,y:200});
     b2.vector({x:178,y:200});
     bounceVector(b1, b2);
+
 </script>
 </body>
 </html>

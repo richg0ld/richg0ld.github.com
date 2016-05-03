@@ -275,8 +275,8 @@ var User = (function () {
     return User;
 })();
 var bg = new Around("canvas", "bg.jpg"); //배경
-var obj = new Around("canvas", "obj.png"); //닝겐
-var user = new User("canvas", "sprite.png"); //맨앞 풀숲
+var obj = new Around("canvas", "obj.png"); //맨앞 풀숲
+var user = new User("canvas", "sprite.png"); //닝겐
 var Renderer = function (func) {
     window.requestAnimationFrame(function () { return Renderer(func); }); //애니메이션 요청
     context.clearRect(0, 0, canvas.height, canvas.width); // 화면지우기

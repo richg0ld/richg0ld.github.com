@@ -10,8 +10,8 @@ declare let Modernizr;
 
 const canvas = <HTMLCanvasElement> document.getElementById("canvas");
 const context = canvas.getContext("2d");
-canvas.width = 500;
-canvas.height = 300;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 class Obj { //네모 오브젝트 클래스
     name:string;

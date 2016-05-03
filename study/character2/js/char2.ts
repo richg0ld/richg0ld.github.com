@@ -283,8 +283,8 @@ const User =(()=> {
 })();
 
 const bg = new Around("canvas", "bg.jpg");//배경
-const obj = new Around("canvas", "obj.png");//닝겐
-const user = new User("canvas", "sprite.png");//맨앞 풀숲
+const obj = new Around("canvas", "obj.png");//맨앞 풀숲
+const user = new User("canvas", "sprite.png");//닝겐
 
 const Renderer = (func) => { //지우고 그리고 수치 업뎃 을 반복
     window.requestAnimationFrame(()=> Renderer(func) );//애니메이션 요청

@@ -22,10 +22,11 @@
         function Ball(options){
             this.name = options.name;
             this.radius = options.radius;
-            this.x = cvs.width/2 - options.radius * Math.sin( -options.degree * Math.PI/180 );
-            this.y = cvs.height/2 - options.radius * Math.cos( -options.degree * Math.PI/180 );
-            this.vx = 0;
-            this.vy = 0;
+            this.x = cvs.width/2 - options.radius * Math.sin( -options.degree * Math.PI/180 ); // x좌표값
+            this.y = cvs.height/2 - options.radius * Math.cos( -options.degree * Math.PI/180 ); // y좌표값
+            this.vx = 0; //백터 x값
+            this.vy = 0; //백터 y값
+            this.volume = 0 ;//백터크기
             this.strokeBorder = options.strokeBorder || 1;
             this.strokeColor = options.strokeColor || "red";
             this.draw();
@@ -42,14 +43,10 @@
             ctx.closePath();
             ctx.restore();
         };
-        Ball.prototype.vector = function(direction, volume){
-            var diffX = direction.x - this.x;
-            var diffY = direction.y - this.y;
-            var distance = Math.sqrt(diffX * diffX + diffY * diffY);
-            var perX = diffX/distance; //거리 1당 x 방향 값
-            var perY = diffY/distance; //거리 1당 y 방향 값
-            this.vx = perX*volume; //백터값, 방향에 크기를 곱하여 백터값 만듬
-            this.vy = perY*volume; //백터값
+        Ball.prototype.vector = function(location){
+            this.vx = location.x - this.x; // 다음 이동할 위치 (백터) x 값
+            this.vy = location.y - this.y; // 다음 이동할 위치 (백터) y 값
+
             ctx.beginPath();
             ctx.globalAlpha = 0.5;
             ctx.moveTo(this.x, this.y);
@@ -64,18 +61,28 @@
 
     var bounceVector = function (self, target){
 
-        var bounceX = target.vx + self.vx; //타겟에 부딛혀 반사될 백터 x 값
-        var bounceY = target.vy + self.vy; //타겟에 부딛혀 반사될 백터 y 값
+        var dX = target.vx - self.vx; // 다음으로 이동할 공의 중심 사이 거리 계산
+        var dY = target.vy - self.vy; // 다음으로 이동할 공의 중심 사이 거리 계산
+
+        var CollidAngle = Math.atan2(dY,dX);
+
+        var selfCollidX = self.x + dX; //자신이 충돌 후 움직일 반사된 백터 x 값
+        var selfCollidY = self.y + dY; //자신이 충돌 후 움직일 반사된 백터 x 값
+
+        var targetCollidX = target.x - dX; //타겟이 충돌 후 움직일 반사된 백터 x 값
+        var targetCollidY = target.y - dY; //타겟이 충돌 후 움직일 반사된 백터 x 값
+
         ctx.beginPath();
         ctx.globalAlpha = 0.5;
         ctx.moveTo(self.x, self.y);
-        ctx.lineTo(self.x+bounceX, self.y+bounceY);
+        ctx.lineTo(selfCollidX, selfCollidY);
         ctx.moveTo(target.x, target.y);
-        ctx.lineTo(target.x-bounceX, target.y-bounceY);
+        ctx.lineTo(targetCollidX, targetCollidY);
         ctx.lineWidth=this.strokeBorder;
         ctx.strokeStyle= "green";
         ctx.stroke();
         ctx.closePath();
+
     };
 
     var b1 = new Ball({
@@ -100,8 +107,8 @@
     ctx.fill();
     ctx.closePath();
 
-    b1.vector({x:100,y:100},60);
-    b2.vector(b1,30);
+    b1.vector({x:128,y:200});
+    b2.vector({x:178,y:200});
     bounceVector(b1, b2);
 </script>
 </body>

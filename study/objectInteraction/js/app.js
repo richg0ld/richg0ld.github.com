@@ -3,8 +3,8 @@
 })();
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
-canvas.width = 500;
-canvas.height = 300;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 var Obj = (function () {
     function Obj(options) {
         this.name = options.name || "통"; //오브젝트 이름

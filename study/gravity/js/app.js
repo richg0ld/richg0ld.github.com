@@ -25,8 +25,6 @@ var Ball = (function () {
         this.rotate = 0;
         this.vectorX = 0;
         this.vectorY = 0;
-        this.speedX = 0;
-        this.speedY = 0;
         this.elasticity = 0.6 + (1 / this.weight); //탄성
     }
     return Ball;
@@ -73,10 +71,9 @@ var Display = (function (_super) {
         context.restore();
     };
     Display.prototype.update = function (obj) {
-        obj.vectorY += this.gravity;
-        obj.vectorX += this.wind;
-        // obj.vectorX -= obj.vectorX*this.friction;
-        // obj.vectorY -= obj.vectorY*this.friction;
+        obj.vectorX = obj.vectorX + (obj.vectorY * this.friction) + this.wind;
+        obj.vectorY = obj.vectorY + (obj.vectorY * this.friction) + this.gravity;
+        console.log(obj.vectorY);
         obj.x += obj.vectorX;
         obj.y += obj.vectorY;
         obj.rotate += (Math.PI / 180) * obj.vectorX;
@@ -154,32 +151,4 @@ for (var n = 0; n < num; n++) {
     }));
 }
 var d = new Display(objs);
-var Controller = (function () {
-    var w = document.getElementById("wind");
-    var wVal = document.getElementById("wind_val");
-    var wBtn = document.getElementById("wind_btn");
-    var wn = 0;
-    w.addEventListener("input", function () {
-        wn = parseFloat((w.value * 0.1).toFixed(1));
-        wVal.innerHTML = wn;
-    });
-    wBtn.addEventListener("click", function () {
-        d.wind = wn;
-    });
-    var g = document.getElementById("gravity");
-    var gVal = document.getElementById("gravity_val");
-    var gBtn = document.getElementById("gravity_btn");
-    var gn = 0.9;
-    g.addEventListener("input", function () {
-        gn = parseFloat((g.value * 0.1).toFixed(1));
-        gVal.innerHTML = gn;
-    });
-    gBtn.addEventListener("click", function () {
-        d.gravity = gn;
-    });
-    canvas.addEventListener("mousedown", function () { return d.gravity = -gn; });
-    canvas.addEventListener("mouseup", function () { return d.gravity = gn; });
-    canvas.addEventListener("touchstart", function () { return d.gravity = -gn; });
-    canvas.addEventListener("touchend", function () { return d.gravity = gn; });
-})();
 //# sourceMappingURL=app.js.map

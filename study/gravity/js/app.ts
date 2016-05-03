@@ -23,8 +23,6 @@ class Ball {
     color: string;
     vectorX: number;
     vectorY: number;
-    speedX: number;
-    speedY: number;
     elasticity: number;
     rotate: number;
 
@@ -38,8 +36,6 @@ class Ball {
         this.rotate = 0;
         this.vectorX = 0;
         this.vectorY = 0;
-        this.speedX = 0;
-        this.speedY = 0;
         this.elasticity = 0.6 + (1/this.weight); //탄성
     }
 }
@@ -89,10 +85,9 @@ class Display extends Gravity {
         context.restore();
     }
     update(obj){
-        obj.vectorY += this.gravity;
-        obj.vectorX += this.wind;
-        // obj.vectorX -= obj.vectorX*this.friction;
-        // obj.vectorY -= obj.vectorY*this.friction;
+        obj.vectorX = obj.vectorX + (obj.vectorY*this.friction) + this.wind;
+        obj.vectorY = obj.vectorY + (obj.vectorY*this.friction) + this.gravity;
+        console.log(obj.vectorY);
         obj.x += obj.vectorX;
         obj.y += obj.vectorY;
         obj.rotate += (Math.PI / 180)*obj.vectorX;
@@ -172,38 +167,4 @@ for(let n=0; n<num; n++){ //오브젝트들을 생성하여 objs 배열에 push 
     }));
 }
 let d = new Display(objs);
-
-
-const Controller = (() =>{
-    const w:any = document.getElementById("wind");
-    const wVal:any = document.getElementById("wind_val");
-    const wBtn:any = document.getElementById("wind_btn");
-    let wn = 0;
-    w.addEventListener("input", ()=>{
-        wn = parseFloat( (w.value*0.1).toFixed(1) );
-        wVal.innerHTML = wn
-    });
-    wBtn.addEventListener("click", ()=>{
-        d.wind = wn;
-    });
-
-    const g:any = document.getElementById("gravity");
-    const gVal:any = document.getElementById("gravity_val");
-    const gBtn:any = document.getElementById("gravity_btn");
-    let gn = 0.9;
-    g.addEventListener("input", ()=>{
-        gn = parseFloat( (g.value*0.1).toFixed(1) );
-        gVal.innerHTML = gn
-    });
-    gBtn.addEventListener("click", ()=>{
-        d.gravity = gn;
-    });
-
-    canvas.addEventListener("mousedown", ()=> d.gravity = -gn );
-    canvas.addEventListener("mouseup", ()=> d.gravity = gn );
-
-    canvas.addEventListener("touchstart", ()=> d.gravity = -gn );
-    canvas.addEventListener("touchend", ()=> d.gravity = gn );
-
-})();
 

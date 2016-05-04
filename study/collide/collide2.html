@@ -116,12 +116,25 @@
                 obj.y = obj.radius;
             }
         }
-
-//        if (obj.x > cvs.width || obj.x < 0 ) { //x으로 반사는 180도에서 자기 각도 만큼 뺀 위치로 이동
-//            obj.angle = 180 - obj.angle;
-//        } else if (obj.y > cvs.height || obj.y < 0) { //y으로 반사는 360도에서 자기 각도 만큼 뺀 위치로 이동
-//            obj.angle = 360 - obj.angle;
-//        }
+    }
+    function bottomHit(){
+        for(var n=0;n<objs.length;n++){
+            if(objs[n].y >= canvas.height - objs[n].radius){
+                objs[n].y = canvas.height - objs[n].radius;
+                objs[n].vy = -(objs[n].vy * objs[n].elasticity);//바닥에 도착했을 때 현재 중력 가속도를 반대 방향으로 탄성만큼 곺한 값으로 바꿔주고 다시 렌더링에서 값을 양의 숫자쪽으로 증가시킨다.
+            }
+        }
+    }
+    function sideHit(){
+        for(var n=0;n<objs.length;n++){
+            if(objs[n].x >= canvas.width - objs[n].radius){
+                objs[n].x = canvas.width - objs[n].radius;
+                objs[n].vx = -(objs[n].vx * objs[n].elasticity);
+            }else if(objs[n].x <= objs[n].radius){
+                objs[n].x = objs[n].radius;
+                objs[n].vx = -(objs[n].vx * objs[n].elasticity);
+            }
+        }
     }
     function collide() {
         var obj;
@@ -211,7 +224,9 @@
     Render(function(){
         clear();
         update();
-        wallHit();
+//        wallHit();
+        bottomHit();
+        sideHit();
         collide();
         draw();
     });

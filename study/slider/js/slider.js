@@ -1,4 +1,7 @@
-//제이쿼리 슬라이드 라이브러리
+/* ----------------------------------------------
+ * RGSlider v1.1 JavaScript
+ * Author - jhkim88@hanbitsoft.co.kr
+ ------------------------------------------------- */
 
 var RGSlider = (function(){
     function RGSlider(container, options){
@@ -107,10 +110,6 @@ var RGSlider = (function(){
             }
         };
 
-        if(Object.keys($.easing).length <= 2){
-            this.settings.easing = "swing";
-            this.settings.complexObjEasing = "swing";
-        }
         if(this.settings.type === "complex"){
             try{
                 if(this.settings.type === "complex" && !this.settings.complexObjDelayTimes) throw new Error("complex 타입의 애니메이션의 오브젝트별 딜레이 시간(complexObjAnimationEndOptions)이 설정 되지 않았습니다.");
@@ -135,6 +134,7 @@ var RGSlider = (function(){
         var _this = this;
         this._SlideSizeChk();
         this.elements.sliderLists.eq(this._curIdx).siblings().find(this.settings.listContent).hide();
+
         if(this.settings.auto){
             this.elements.playButton.hide();
             this.autoPlay();
@@ -148,6 +148,7 @@ var RGSlider = (function(){
         }
         if(this.settings.type === "complex"){
             var n;
+
             this.complexAfterFunc = function(idx){
                 if($.type(this.settings.complexObjAnimationEndOptions[0]) === "array"){
                     for(n = 0;n < this.elements.complexObjClasses[idx].length; n++){
@@ -259,7 +260,7 @@ var RGSlider = (function(){
         var _this = this;
         this.evtDoubleChk(function(){
             _this.complexClearObj();
-            _this.Move(idx,[
+            _this.move(idx,[
                     _this._slideDirection.plus,
                     _this._slideDirection.zero,
                     _this._slideDirection.minus
@@ -273,7 +274,7 @@ var RGSlider = (function(){
         var _this = this;
         this.evtDoubleChk(function(){
             _this.complexClearObj();
-            _this.Move(idx, [
+            _this.move(idx, [
                 _this._slideDirection.minus,
                 _this._slideDirection.zero,
                 _this._slideDirection.plus
@@ -285,7 +286,7 @@ var RGSlider = (function(){
     RGSlider.prototype.leftMove = function(idx, afterFunc){
         var _this = this;
         this.evtDoubleChk(function(){
-            _this.Move(idx, [
+            _this.move(idx, [
                 _this._slideDirection.plus,
                 _this._slideDirection.zero,
                 _this._slideDirection.minus
@@ -295,17 +296,15 @@ var RGSlider = (function(){
     RGSlider.prototype.rightMove = function(idx, afterFunc){
         var _this = this;
         this.evtDoubleChk(function(){
-            _this.Move(idx, [
+            _this.move(idx, [
                 _this._slideDirection.minus,
                 _this._slideDirection.zero,
                 _this._slideDirection.plus
             ], afterFunc);
         });
     };
-    RGSlider.prototype.Move = function(idx, direction, afterFunc){
+    RGSlider.prototype.move = function(idx, direction, afterFunc){
         var _this = this;
-        this.addActiveClass(idx);
-        this.updatePageNumber(idx);
         this.elements.listContents.css({'display':'none', 'z-Index':0});
         this.elements.contents(idx).stop().css({"display":"block", 'z-Index':10}).css(direction[0]);
         this.elements.contents(this._curIdx).stop().css({"display":"block", "left": 0, "top": 0});
@@ -392,5 +391,5 @@ var RGSlider = (function(){
             _this._SlideSizeChk();
         });
     };
-    return RGSlider;
+    return RGSlider
 })();

@@ -1,4 +1,8 @@
-
+/* ----------------------------------------------
+ * HanbitSoft Service Development Team
+ * RGSlider v1.1 Stylesheet
+ * Author - jhkim88@hanbitsoft.co.kr
+------------------------------------------------- */
 
 .slider{position:relative;height:100%;text-align:center;overflow:hidden;}
 .slider ul.slider_list{display:inline-block;width:auto;padding:500px 0 0 0;*display:inline;zoom:1}

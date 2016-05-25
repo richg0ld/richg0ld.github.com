@@ -9,7 +9,7 @@ class RGSlider {
         this.settings = new Map([
             ["type", "default"],
             ["speed", 250],
-            ["current", 0], // 시작하는 값
+            ["current", 0],
             ["activeClass", "on"],
             ["sliderClass", ".slider"],
             ["sliderList", ".slider_list"],
@@ -33,6 +33,9 @@ class RGSlider {
         this.set();
         this.init();
         this.eventHandler();
+    }
+    getElems(name){
+        return this.elements.get(name).length > 1 ? this.elements.get(name) : this.elements.get(name)[0] ;
     }
     set(){
         const settings = this.settings;
@@ -68,9 +71,6 @@ class RGSlider {
         }
 
     }
-    getElems(name){
-        return this.elements.get(name).length > 1 ? this.elements.get(name) : this.elements.get(name)[0] ;
-    }
     init(){
         const ElemsArray = el=>{
             let arr = [];
@@ -81,9 +81,8 @@ class RGSlider {
         };
         const sliderLists = ElemsArray(this.getElems("sliderLists"));
         this.getElems("sliderLists")[this._curIdx].setAttribute("class", this.settings.get("activeClass"));
-        this.getElems("sliderList").style.width = 100*this.length + "%";
-
-        sliderLists.forEach( item => item.style.width = 100/this.length + "%" );
+        this.getElems("sliderList").style.width = `${100*this.length}%`;
+        sliderLists.forEach( item => item.style.width = `${100/this.length}%` );
     }
     slideMove(idx){
         this.elements.get("sliderList")[0].style.transitionDuration = `${this.settings.get("speed")}ms`;
@@ -92,7 +91,6 @@ class RGSlider {
     }
     rightMove(){
         this._curIdx = ++this._curIdx > this.length-1 ?  0 : this._curIdx ;
-        console.log(this._curIdx);
         this.slideMove(this._curIdx);
     }
     leftMove(){

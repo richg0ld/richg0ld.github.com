@@ -23,8 +23,7 @@ var RGSlider = (function(){
             stopButton: ".btn_stop"
         };
 
-        if(){
-            if(options.hasOwnProperty)
+        if(options){
             Object.keys(options).forEach(function(prop){
                 _this.settings[prop] = options[prop];
             });

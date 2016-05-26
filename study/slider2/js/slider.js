@@ -34,7 +34,7 @@ class RGSlider {
         this.init();
         this.eventHandler();
     }
-    getElems(name){
+    getElem(name){
         return this.elements.get(name).length > 1 ? this.elements.get(name) : this.elements.get(name)[0] ;
     }
     set(){
@@ -79,14 +79,14 @@ class RGSlider {
             }
             return arr;
         };
-        const sliderLists = ElemsArray(this.getElems("sliderLists"));
-        this.getElems("sliderLists")[this._curIdx].setAttribute("class", this.settings.get("activeClass"));
-        this.getElems("sliderList").style.width = `${100*this.length}%`;
+        const sliderLists = ElemsArray(this.getElem("sliderLists"));
+        this.getElem("sliderLists")[this._curIdx].setAttribute("class", this.settings.get("activeClass"));
+        this.getElem("sliderList").style.width = `${100*this.length}%`;
         sliderLists.forEach( item => item.style.width = `${100/this.length}%` );
     }
     slideMove(idx){
-        this.elements.get("sliderList")[0].style.transitionDuration = `${this.settings.get("speed")}ms`;
-        this.elements.get("sliderList")[0].style.transform = `translate3d(${-idx*this.width}px, 0px, 0px)`;
+        this.getElem("sliderList").style.transitionDuration = `${this.settings.get("speed")}ms`;
+        this.getElem("sliderList").style.transform = `translate3d(${-idx*this.width}px, 0px, 0px)`;
         this._curIdx = idx;
     }
     rightMove(){
@@ -98,10 +98,10 @@ class RGSlider {
         this.slideMove(this._curIdx);
     }
     eventHandler(){
-        this.getElems("prevButton").addEventListener("click",()=>{
+        this.getElem("prevButton").addEventListener("click",()=>{
             this.prev()
         });
-        this.getElems("nextButton").addEventListener("click", ()=>{
+        this.getElem("nextButton").addEventListener("click", ()=>{
             this.next()
         });
     }

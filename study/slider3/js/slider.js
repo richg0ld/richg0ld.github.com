@@ -43,11 +43,9 @@ var RGSlider = (function(){
         var settings = this.settings;
         var container = this.container;
 
-        this._evtCnt = 0;
         ["_curIdx", "_actIdx"].forEach(function(prop){
             _this[prop] = settings.current
         });
-
 
         switch(settings.type){
             case "slide" :
@@ -88,6 +86,7 @@ var RGSlider = (function(){
         this.getElems("sliderList").style.width = 100*this.length + "%";
         sliderLists.forEach(function(el){
             el.style.width = 100/_this.length + "%";
+            el.style.height = _this.height+ "px";
         });
     };
 
@@ -115,7 +114,12 @@ var RGSlider = (function(){
         this.getElems("nextButton").addEventListener("click", function(){
             _this.next()
         });
+        window.addEventListener("resize",function(){
+            _this.width = _this.container.clientWidth;
+            _this.slideMove(_this._curIdx);
+        });
     };
+    
 
     return RGSlider;
 })();

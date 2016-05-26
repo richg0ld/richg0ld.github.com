@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
 <title>slider template</title>
 <link rel="stylesheet" href="css/slider.css">
 <style>
@@ -10,13 +11,13 @@
     ul,li{list-style:none}
     h1{margin: 20px 0 10px;}
 
-    .slider_area{width:1000px;margin: 0 auto;height:700px;}
+    /*.slider_area{position:relative;left:0;top:0;right:0;bottom:0;}*/
+    .slider_area{width:100%;margin: 0 auto;height:100%;}
 </style>
 </head>
 <body>
 
 <div id="wrap">
-    <h1>complex</h1>
     <div class="slider_area">
         <div class="slider">
             <ul class="slider_list">
@@ -55,6 +56,8 @@
     </div>
 <script src="js/slider.js"></script>
 <script>
+    document.querySelectorAll(".slider_area")[0].style.height = window.innerHeight+"px";
+
     var slider = new RGSlider(".slider_area", {
         type: "slide",
         speed: 500,

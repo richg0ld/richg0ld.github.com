@@ -23,7 +23,8 @@ var RGSlider = (function(){
             stopButton: ".btn_stop"
         };
 
-        if(options){
+        if(){
+            if(options.hasOwnProperty)
             Object.keys(options).forEach(function(prop){
                 _this.settings[prop] = options[prop];
             });
@@ -76,8 +77,8 @@ var RGSlider = (function(){
     RGSlider.prototype.init = function(){
         var _this = this;
         var ElemsArray = function(el){
-            let arr = [];
-            for(let n = 0; n < el.length; n++){
+            var arr = [];
+            for(var n = 0; n < el.length; n++){
                 arr.push(el[n]);
             }
             return arr;
@@ -87,7 +88,7 @@ var RGSlider = (function(){
 
         this.getElems("sliderList").style.width = 100*this.length + "%";
         sliderLists.forEach(function(el){
-            el.style.width = 100/_this.length + "%" ;
+            el.style.width = 100/_this.length + "%";
         });
     };
 

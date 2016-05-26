@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>slider template</title>
+<link rel="stylesheet" href="css/slider.css">
+<style>
+    *{margin:0;padding:0}
+    body{font-size:14px;line-height:1.5}
+    ul,li{list-style:none}
+    h1{margin: 20px 0 10px;}
+
+    .slider_area{width:1000px;margin: 0 auto;height:700px;}
+</style>
+</head>
+<body>
+
+<div id="wrap">
+    <h1>complex</h1>
+    <div class="slider_area">
+        <div class="slider">
+            <ul class="slider_list">
+                <li>
+                    <button class="dot">배너1 보기</button>
+                    <div class="content" style="background-color:lightskyblue">
+                        <img src="images/img01.jpg" alt="배너1">
+                    </div>
+                </li>
+                <li>
+                    <button class="dot">배너2 보기</button>
+                    <div class="content" style="background-color:greenyellow">
+                        <img src="images/img02.jpg" alt="배너2">
+                    </div>
+                </li>
+                <li>
+                    <button class="dot">배너3 보기</button>
+                    <div class="content" style="background-color:orange">
+                        <img src="images/img03.jpg" alt="배너3">
+                    </div>
+                </li>
+                <li>
+                    <button class="dot">배너4 보기</button>
+                    <div class="content" style="background-color:lightpink">
+                        <img src="images/img03.jpg" alt="배너4">
+                    </div>
+                </li>
+            </ul>
+            <div class="btn_prev"><button type="button">이전 내용 보기</button></div>
+            <div class="btn_next"><button type="button">다음 내용 보기</button></div>
+            <div class="control">
+                <div class="btn_play"><button type="button">재생</button></div>
+                <div class="btn_stop"><button type="button">정지</button></div>
+            </div>
+        </div>
+    </div>
+<script src="js/slider.js"></script>
+<script>
+    var slider = new RGSlider(".slider_area", {
+        type: "slide",
+        speed: 500,
+        current: 0
+    });
+</script>
+</body>
+</html>

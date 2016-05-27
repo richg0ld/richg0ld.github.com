@@ -69,7 +69,6 @@ class RGSlider {
         for(const k of elemsKey){
             this.elements.set(k, container.querySelectorAll(settings.get(k)));
         }
-
     }
     init(){
         const ElemsArray = el=>{

@@ -69,18 +69,19 @@ var RGSlider = (function(){
         this.width = container.clientWidth;
         this.height = container.clientHeight;
         this.length = this.getElems("sliderLists").length;
+        this.cPos = -settings.current*this.width;
     };
 
     RGSlider.prototype.init = function(){
         var _this = this;
-        var ElemsArray = function(el){
+        var elemsArray = function(el){
             var arr = [];
             for(var n = 0; n < el.length; n++){
                 arr.push(el[n]);
             }
             return arr;
         };
-        var sliderLists = ElemsArray(this.getElems("sliderLists"));
+        var sliderLists = elemsArray(this.getElems("sliderLists"));
         this.getElems("sliderLists")[this._curIdx].setAttribute("class", this.settings.activeClass);
 
         this.getElems("sliderList").style.width = 100*this.length + "%";
@@ -91,11 +92,11 @@ var RGSlider = (function(){
     };
 
     RGSlider.prototype.slideMove = function(idx){
+        this.cPos = -idx*this.width;
         this.getElems("sliderList").style.transitionDuration = this.settings.speed +"ms";
-        this.getElems("sliderList").style.transform = "translate3d("+ -idx*this.width +"px, 0px, 0px)";
+        this.getElems("sliderList").style.transform = "translate3d("+ this.cPos +"px, 0px, 0px)";
         this._curIdx = idx;
     };
-
     RGSlider.prototype.rightMove = function(){
         this._curIdx = ++this._curIdx > this.length-1 ?  0 : this._curIdx ;
         this.slideMove(this._curIdx);
@@ -118,8 +119,33 @@ var RGSlider = (function(){
             _this.width = _this.container.clientWidth;
             _this.slideMove(_this._curIdx);
         });
+        this.pos = {};
+        this.getElems("sliderList").addEventListener("touchstart",function(e){
+            _this.pos.start = e.touches[0].clientX;
+            _this.getElems("sliderList").style.transitionDuration ="0ms";
+        });
+        this.getElems("sliderList").addEventListener("touchmove",function(e){
+            _this.pos.move = e.touches[0].clientX;
+            _this.cPos -= (_this.pos.start - _this.pos.move);
+            _this.getElems("sliderList").style.transform = "translate3d("+ _this.cPos +"px, 0px, 0px)";
+            _this.pos.start = _this.pos.move;
+        });
+        this.getElems("sliderList").addEventListener("touchend",function(e){
+            var nextPoint = _this.width*_this._curIdx + _this.width/2; //오른쪽으로 넘어가는 기준이 되는 뷰 중앙 값
+            var prevPoint = _this.width*_this._curIdx - _this.width/2; //왼쪽으로 넘어가는기준이 되는 뷰 중앙 값
+            //현재 페이지의 위치값에서 화면 너비의 절반 값이 기준이 될 수 있다.
+            if(_this.cPos > -prevPoint){
+                console.log("왼쪽");
+                _this._curIdx = --_this._curIdx < 0 ? 0 : _this._curIdx ;
+            }else if(_this.cPos < -nextPoint){
+                console.log("오른쪽");
+                _this._curIdx = ++_this._curIdx > _this.length-1 ?  _this.length-1 : _this._curIdx ;
+            }else{
+                console.log("제자리");
+            }
+            _this.slideMove(_this._curIdx);
+        });
     };
-    
 
     return RGSlider;
 })();

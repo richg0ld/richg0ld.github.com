@@ -109,15 +109,15 @@ var RGSlider = (function(){
 
     RGSlider.prototype.eventHandler = function(){
         var _this = this;
+        window.addEventListener("resize",function(){
+            _this.width = _this.container.clientWidth;
+            _this.slideMove(_this._curIdx);
+        });
         this.getElems("prevButton").addEventListener("click",function(){
             _this.prev()
         });
         this.getElems("nextButton").addEventListener("click", function(){
             _this.next()
-        });
-        window.addEventListener("resize",function(){
-            _this.width = _this.container.clientWidth;
-            _this.slideMove(_this._curIdx);
         });
         this.pos = {};
         this.getElems("sliderList").addEventListener("touchstart",function(e){

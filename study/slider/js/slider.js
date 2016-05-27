@@ -53,9 +53,9 @@ var RGSlider = (function(){
         this._actIdx = this.settings.current;
         this._slideFunc = {
             "default": {
-                slideType: this.change,
-                prev: this.change,
-                next: this.change
+                slideType: this.show,
+                prev: this.show,
+                next: this.show
             },
             "fade":{
                 slideType: this.fade,
@@ -230,7 +230,7 @@ var RGSlider = (function(){
             this.complexAfterFunc(this.settings.current);
         }
     };
-    RGSlider.prototype.change = function(idx){
+    RGSlider.prototype.show = function(idx){
         if(this._curIdx === idx) return;
         this.addActiveClass(idx);
         this.updatePageNumber(idx);

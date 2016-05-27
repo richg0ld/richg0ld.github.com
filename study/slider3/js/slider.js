@@ -131,8 +131,8 @@ var RGSlider = (function(){
             _this.pos.start = _this.pos.move;
         });
         this.getElems("sliderList").addEventListener("touchend",function(e){
-            var nextPoint = _this.width*_this._curIdx + _this.width/3; //오른쪽으로 넘어가는 기준이 되는 뷰 중앙 값
-            var prevPoint = _this.width*_this._curIdx - _this.width/3; //왼쪽으로 넘어가는기준이 되는 뷰 중앙 값
+            var nextPoint = _this.width*_this._curIdx + _this.width/5; //오른쪽으로 넘어가는 기준이 되는 뷰 중앙 값
+            var prevPoint = _this.width*_this._curIdx - _this.width/5; //왼쪽으로 넘어가는기준이 되는 뷰 중앙 값
             //현재 페이지의 위치값에서 화면 너비의 절반 값이 기준이 될 수 있다.
             if(_this.cPos > -prevPoint){
                 console.log("왼쪽");

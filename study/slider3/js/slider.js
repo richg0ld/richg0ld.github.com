@@ -53,11 +53,6 @@ var RGSlider = (function(){
                 this.next = this.rightMove;
                 this.prev = this.leftMove;
                 break;
-            case "default" :
-                this.move = this.slideMove;
-                this.next = this.rightMove;
-                this.prev = this.leftMove;
-                break;
         }
         this.elements = {};
         var elemsKey = ["sliderClass", "sliderList" ,"dotButtons", "listContents", "sliderLists", "prevButton", "nextButton", "playButton", "stopButton"];

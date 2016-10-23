@@ -44,7 +44,7 @@
             <id />
           </State>
           <State>
-            <id>CSS</id>
+            <id>ECMAScript 6 migration aidsJavaScript</id>
           </State>
           <State>
             <id>GeneralJavaScript</id>
@@ -52,13 +52,10 @@
           <State>
             <id>JavaScript</id>
           </State>
-          <State>
-            <id>Node.jsJavaScript</id>
-          </State>
         </expanded-state>
         <selected-state>
           <State>
-            <id>JavaScript</id>
+            <id>ES6BindWithArrowFunction</id>
           </State>
         </selected-state>
       </profile-state>
@@ -73,5 +70,9 @@
     <OptionsSetting value="true" id="Edit" />
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="VagrantProjectSettings">
+    <option name="instanceFolder" value="" />
+    <option name="provider" value="" />
   </component>
 </project>

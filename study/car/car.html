@@ -37,25 +37,14 @@ var car = new Car("Tayo",
     new Light("#ff9000"), //상향등
     new FuelTank("oil") //연료탱크
 );
-var car1 = new Car("Tayo2",
-    new Frame("알루미늄"), //골격
-    new Engine(), //엔진
-    new Wheel("금호"), //앞바퀴
-    new Wheel("한국"), //뒷바퀴
-    new Skin("#ededed"), //겉면
-    new Glass("100px"), //앞유리
-    new Glass(), //옆유리
-    new Light("red"), //상향등
-    new FuelTank("gas") //연료탱크
-);
 </script>
 <!--유저 인터페이스 설정-->
 <script type="text/javascript">
 userSet.bg("./bg3.jpg");
-userSet.key("right", car1, "speedUp");
-userSet.key("left", car1, "speedDown");
-userSet.key("shift", car1, "boost");
-userSet.key("space", car1, "addFuel");
+userSet.key("right", car, "speedUp");
+userSet.key("left", car, "speedDown");
+userSet.key("shift", car, "boost");
+userSet.key("space", car, "addFuel");
 </script>
 <!--차량 하나 만드는데 이정도로 많은 과정이 뒤에서 일어남-->
 

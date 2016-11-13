@@ -18,7 +18,7 @@
         table{border-collapse:collapse;table-layout:fixed;border-spacing:0}
         hr{display:none}
         /* //reset */
-        #map{
+        #view{
             height:100%;
             margin:0;
             padding:0;
@@ -27,17 +27,36 @@
     <script type="text/javascript" src="https://apis.daum.net/maps/maps3.js?apikey=ae5c93d70abf286ea96ba705ad3e5498"></script>
     <script>
         window.onload = function(){
-            const mapArea = document.getElementById('map');
-            const mapOptions = {
-                center: new daum.maps.LatLng(37.5239850299, 127.0227744891),
-                level: 3
-            };
 
-            const map = new daum.maps.Map(mapArea, mapOptions);
+            var param = document.location.href.split("?");
+            var data = param[1].split("=");
+            var viewArea = document.getElementById('view');
+
+            console.log(data);
+
+            if(data[1] === "map"){
+
+                var mapOptions = {
+                    center: new daum.maps.LatLng(37.5239850299, 127.0227744891),
+                    level: 3
+                };
+
+                var map = new daum.maps.Map(viewArea, mapOptions);
+
+            }else if(data[1] === "roadView"){
+
+                 var roadview = new daum.maps.Roadview(viewArea);
+                 var roadviewClient = new daum.maps.RoadviewClient();
+
+                 var position = new daum.maps.LatLng(37.5239850299, 127.0227744891);
+                 roadviewClient.getNearestPanoId(position, 50, function(panoId) {
+                     roadview.setPanoId(panoId, position);
+                 });
+            }
         }
     </script>
 </head>
 <body>
-    <div id="map" ></div>
+    <div id="view" ></div>
 </body>
 </html>

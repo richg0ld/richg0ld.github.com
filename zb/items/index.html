@@ -78,16 +78,16 @@
         function $ID(id){
             this.element = document.getElementById(id);
         }
-        $ID.prototype.attrs= function(obj){
+        $ID.prototype.attrs = function(obj){
             var _this = this;
             var keys = Object.keys(obj);
-            keys.forEach(function(v, i){
+            keys.forEach(function(v){
                 _this.element.setAttribute(v, obj[v]);
             });
-        }
+        };
         $ID.prototype.insert = function(str){
             this.element.innerHTML = str;
-        }
+        };
         return $ID;
 
     })();
@@ -114,7 +114,7 @@
 
             building.img.attrs({"src": data.img,"alt": data.name});
             building.name.insert(data.name);
-            building.address.insert(`${data.address1} ${data.address2} ${data.address3}`);
+            building.address.insert(data.address1+" "+data.address2+" "+data.address3);
             building.floor.insert(data.floor);
             building.rooms.insert(data.rooms);
             building.established.insert(data.established);

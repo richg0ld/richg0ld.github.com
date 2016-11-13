@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* reset */
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,legend,textarea,p,th,td,input,select,textarea,button{margin:0;padding:0}
+        html,body{width:100%;height:100%}
+        body{font-family:'돋움',dotum,tahoma,sans-serif;font-size:13px;line-height:1.5;color:#000}
+        fieldset,img{border:0 none;vertical-align:top}
+        dl,ul,ol,menu,li{list-style:none}
+        button{overflow:visible;border:0 none;background-color:transparent;cursor:pointer;font-family:'Nanumgothic','나눔고딕','돋움',dotum,tahoma,sans-serif}
+        button::-moz-focus-inner{padding:0;border:0}
+        address,caption,em{font-style:normal}
+        a{color:#000;text-decoration:none}
+        a:focus,a:active,a:hover{color:#000;text-decoration:underline}
+        table{border-collapse:collapse;table-layout:fixed;border-spacing:0}
+        hr{display:none}
+        /* //reset */
+        .blind{
+            overflow:hidden;
+            position:absolute;
+            top:0;
+            left:0;
+            width:1px;
+            height:1px;
+            font-size:0;
+            line-height:100px;
+            white-space:nowrap;
+        }
+        .detail-building{
+            min-height: 120px;
+            position: relative;
+            padding-left:135px;
+            color:#333333;
+            font-size: 13px;
+            line-height: 23px;
+        }
+        #building-img{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width:120px;
+            height:120px;
+        }
+        .detail-building strong{
+            color:#000000;
+        }
+        .detail-building dl{
+            margin-top:4px;
+        }
+        .detail-building .c-btm {
+            border-bottom: 1px solid #eeeeee;
+        }
+    </style>
+    <script>
+
+    var ajax = function(url, callback) {
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                callback(null ,JSON.parse(xmlhttp.responseText));
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    };
+
+    var viewData = function(obj){
+        var building = obj.datas.building;
+        document.getElementById("building-img").setAttribute('src', building.img);
+        document.getElementById("building-img").setAttribute('alt', building.name);
+        document.getElementById("building-name").innerHTML = building.name;
+        document.getElementById("building-address").innerHTML = building.address1+" "+building.address2+" "+building.address3;
+        document.getElementById("building-floor").innerHTML = building.floor;
+        document.getElementById("building-rooms").innerHTML = building.rooms;
+        document.getElementById("building-established").innerHTML = building.established;
+    };
+
+    window.onload = function(){
+
+        ajax("items.json", function(err, response){
+            viewData(response)
+        });
+
+    };
+
+    </script>
+</head>
+<body>
+<div class="detail-building">
+    <img id="building-img" src="" width="120" height="120" alt=""/>
+    <p><strong id="building-name"></strong></p>
+    <p id="building-address" class="c-btm"></p>
+    <dl>
+        <dt class="blind">층수</dt>
+        <dd id="building-floor"></dd>
+        <dt class="blind">세대수</dt>
+        <dd id="building-rooms"></dd>
+        <dt class="blind">완공날짜</dt>
+        <dd id="building-established"></dd>
+    </dl>
+</div>
+</body>
+</html>

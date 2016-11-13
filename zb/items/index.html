@@ -78,15 +78,14 @@
         function $ID(id){
             this.element = document.getElementById(id);
         }
-        $ID.prototype.attrs(obj){
+        $ID.prototype.attrs= function(obj){
             var _this = this;
             var keys = Object.keys(obj);
             keys.forEach(function(v, i){
-                console.log(_this.element);
                 _this.element.setAttribute(v, obj[v]);
             });
         }
-        $ID.prototype.insert(str){
+        $ID.prototype.insert = function(str){
             this.element.innerHTML = str;
         }
         return $ID;

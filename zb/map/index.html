@@ -32,24 +32,26 @@
             var data = param[1].split("=");
             var viewArea = document.getElementById('view');
 
-            if(data[1] === "map"){
+            if(data[0] === "type"){
+                if(data[1] === "map"){
 
-                var mapOptions = {
-                    center: new daum.maps.LatLng(37.5239850299, 127.0227744891),
-                    level: 3
-                };
+                    var mapOptions = {
+                        center: new daum.maps.LatLng(37.5239850299, 127.0227744891),
+                        level: 3
+                    };
 
-                var map = new daum.maps.Map(viewArea, mapOptions);
+                    var map = new daum.maps.Map(viewArea, mapOptions);
 
-            }else if(data[1] === "roadView"){
+                }else if(data[1] === "roadView"){
 
-                 var roadview = new daum.maps.Roadview(viewArea);
-                 var roadviewClient = new daum.maps.RoadviewClient();
+                    var roadview = new daum.maps.Roadview(viewArea);
+                    var roadviewClient = new daum.maps.RoadviewClient();
 
-                 var position = new daum.maps.LatLng(37.5239850299, 127.0227744891);
-                 roadviewClient.getNearestPanoId(position, 50, function(panoId) {
-                     roadview.setPanoId(panoId, position);
-                 });
+                    var position = new daum.maps.LatLng(37.5239850299, 127.0227744891);
+                    roadviewClient.getNearestPanoId(position, 50, function(panoId) {
+                        roadview.setPanoId(panoId, position);
+                    });
+                }
             }
         }
     </script>

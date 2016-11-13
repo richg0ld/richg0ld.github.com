@@ -60,28 +60,65 @@
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                callback(null ,JSON.parse(xmlhttp.responseText));
+            if (xmlhttp.readyState == 4) {
+                if(xmlhttp.status == 200){
+                    callback(null ,JSON.parse(xmlhttp.responseText));
+                }else{
+                    callback("통신 에러" ,null);
+                }
+                
             }
         };
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
     };
 
-    var viewData = function(obj){
-        var building = obj.datas.building;
-        document.getElementById("building-img").setAttribute('src', building.img);
-        document.getElementById("building-img").setAttribute('alt', building.name);
-        document.getElementById("building-name").innerHTML = building.name;
-        document.getElementById("building-address").innerHTML = building.address1+" "+building.address2+" "+building.address3;
-        document.getElementById("building-floor").innerHTML = building.floor;
-        document.getElementById("building-rooms").innerHTML = building.rooms;
-        document.getElementById("building-established").innerHTML = building.established;
-    };
+    var $ID = (function() {
+
+        function $ID()(id){
+            this.element = document.getElementById(id);
+        }
+        $ID.prototype.attrs(obj){
+            var _this = this;
+            var keys = Object.keys(obj);
+            keys.forEach(function(v, i){
+                console.log(_this.element);
+                _this.element.setAttribute(v, obj[v]);
+            });
+        }
+        $ID.prototype.insert(str){
+            this.element.innerHTML = str;
+        }
+        return $ID;
+
+    })()
+
 
     window.onload = function(){
+
+        var building ={
+            img: new $ID("building-img"),
+            name: new $ID("building-name"),
+            address: new $ID("building-address"),
+            floor: new $ID("building-floor"),
+            rooms: new $ID("building-rooms"),
+            established: new $ID("building-established")
+        };
+
         ajax("items.json", function(err, response){
-            viewData(response)
+            if(err !== null){
+                alert(err);
+                return;
+            }
+
+            var data = response.datas.building;
+
+            building.img.attrs({"src": data.img,"alt": data.name});
+            building.name.insert(data.name);
+            building.address.insert(`${data.address1} ${data.address2} ${data.address3}`);
+            building.floor.insert(data.floor);
+            building.rooms.insert(data.rooms);
+            building.established.insert(data.established);
         });
 
     };

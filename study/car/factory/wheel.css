@@ -1,8 +1,0 @@
-@charset "utf-8";
-.wheel{
-    transform-origin:35px 35px;/*회전시킬 기준점*/
-    animation:rotateWheel linear 0s infinite;/*회전에니메이션 재원*/
-    animation-play-state:running;/*paused 는 멈춤*/}
-@keyframes rotateWheel{
-    100%{transform:rotate(360deg);}/*회전 키프레임*/
-}
